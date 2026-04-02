@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2550" height="3300" viewBox="0 0 2550 3300">
+<rect width="100%" height="100%" fill="white"/>
+<g fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="90" y="90" width="2370" height="3120" rx="60" stroke-width="14"/>
+<circle cx="1275" cy="1540" r="130" stroke-width="10"/>
+<circle cx="1275" cy="1540" r="260" stroke-width="10"/>
+<circle cx="1275" cy="1540" r="420" stroke-width="10"/>
+<circle cx="1275" cy="1540" r="590" stroke-width="10"/>
+<circle cx="1275" cy="1540" r="760" stroke-width="10"/>
+<path d="M 1435 1540 Q 1518 1569 1605 1540 Q 1518 1511 1435 1540" stroke-width="8"/>
+<path d="M 1423 1601 Q 1488 1660 1580 1666 Q 1511 1606 1423 1601" stroke-width="8"/>
+<path d="M 1388 1653 Q 1426 1733 1508 1773 Q 1468 1691 1388 1653" stroke-width="8"/>
+<path d="M 1336 1688 Q 1341 1776 1401 1845 Q 1395 1753 1336 1688" stroke-width="8"/>
+<path d="M 1275 1700 Q 1246 1783 1275 1870 Q 1304 1783 1275 1700" stroke-width="8"/>
+<path d="M 1214 1688 Q 1155 1753 1149 1845 Q 1209 1776 1214 1688" stroke-width="8"/>
+<path d="M 1162 1653 Q 1082 1691 1042 1773 Q 1124 1733 1162 1653" stroke-width="8"/>
+<path d="M 1127 1601 Q 1039 1606 970 1666 Q 1062 1660 1127 1601" stroke-width="8"/>
+<path d="M 1115 1540 Q 1032 1511 945 1540 Q 1032 1569 1115 1540" stroke-width="8"/>
+<path d="M 1127 1479 Q 1062 1420 970 1414 Q 1039 1474 1127 1479" stroke-width="8"/>
+<path d="M 1162 1427 Q 1124 1347 1042 1307 Q 1082 1389 1162 1427" stroke-width="8"/>
+<path d="M 1214 1392 Q 1209 1304 1149 1235 Q 1155 1327 1214 1392" stroke-width="8"/>
+<path d="M 1275 1380 Q 1304 1297 1275 1210 Q 1246 1297 1275 1380" stroke-width="8"/>
+<path d="M 1336 1392 Q 1395 1327 1401 1235 Q 1341 1304 1336 1392" stroke-width="8"/>
+<path d="M 1388 1427 Q 1468 1389 1508 1307 Q 1426 1347 1388 1427" stroke-width="8"/>
+<path d="M 1423 1479 Q 1511 1474 1580 1414 Q 1488 1420 1423 1479" stroke-width="8"/>
+<ellipse cx="1785" cy="1540" rx="70" ry="95" stroke-width="8"/>
+<path d="M 1740 1540 C 1770 1515, 1800 1565, 1830 1540" stroke-width="6"/>
+<circle cx="1717" cy="1813" r="55" stroke-width="8"/>
+<ellipse cx="1687" cy="1725" rx="18" ry="58" transform="rotate(-8 1687 1725)" stroke-width="8"/>
+<ellipse cx="1747" cy="1725" rx="18" ry="58" transform="rotate(8 1747 1725)" stroke-width="8"/>
+<circle cx="1572" cy="1982" r="28" stroke-width="7"/>
+<circle cx="1543" cy="2022" r="28" stroke-width="7"/>
+<circle cx="1496" cy="2006" r="28" stroke-width="7"/>
+<circle cx="1496" cy="1957" r="28" stroke-width="7"/>
+<circle cx="1543" cy="1942" r="28" stroke-width="7"/>
+<circle cx="1530" cy="1982" r="25" stroke-width="7"/>
+<ellipse cx="1275" cy="2050" rx="70" ry="95" stroke-width="8"/>
+<path d="M 1230 2050 C 1260 2025, 1290 2075, 1320 2050" stroke-width="6"/>
+<circle cx="1020" cy="2000" r="55" stroke-width="8"/>
+<ellipse cx="990" cy="1912" rx="18" ry="58" transform="rotate(-8 990 1912)" stroke-width="8"/>
+<ellipse cx="1050" cy="1912" rx="18" ry="58" transform="rotate(8 1050 1912)" stroke-width="8"/>
+<circle cx="875" cy="1795" r="28" stroke-width="7"/>
+<circle cx="846" cy="1835" r="28" stroke-width="7"/>
+<circle cx="799" cy="1820" r="28" stroke-width="7"/>
+<circle cx="799" cy="1770" r="28" stroke-width="7"/>
+<circle cx="846" cy="1755" r="28" stroke-width="7"/>
+<circle cx="833" cy="1795" r="25" stroke-width="7"/>
+<ellipse cx="765" cy="1540" rx="70" ry="95" stroke-width="8"/>
+<path d="M 720 1540 C 750 1515, 780 1565, 810 1540" stroke-width="6"/>
+<circle cx="833" cy="1303" r="55" stroke-width="8"/>
+<ellipse cx="803" cy="1215" rx="18" ry="58" transform="rotate(-8 803 1215)" stroke-width="8"/>
+<ellipse cx="863" cy="1215" rx="18" ry="58" transform="rotate(8 863 1215)" stroke-width="8"/>
+<circle cx="1062" cy="1098" r="28" stroke-width="7"/>
+<circle cx="1033" cy="1138" r="28" stroke-width="7"/>
+<circle cx="986" cy="1123" r="28" stroke-width="7"/>
+<circle cx="986" cy="1074" r="28" stroke-width="7"/>
+<circle cx="1033" cy="1058" r="28" stroke-width="7"/>
+<circle cx="1020" cy="1098" r="25" stroke-width="7"/>
+<ellipse cx="1275" cy="1030" rx="70" ry="95" stroke-width="8"/>
+<path d="M 1230 1030 C 1260 1005, 1290 1055, 1320 1030" stroke-width="6"/>
+<circle cx="1530" cy="1116" r="55" stroke-width="8"/>
+<ellipse cx="1500" cy="1028" rx="18" ry="58" transform="rotate(-8 1500 1028)" stroke-width="8"/>
+<ellipse cx="1560" cy="1028" rx="18" ry="58" transform="rotate(8 1560 1028)" stroke-width="8"/>
+<circle cx="1759" cy="1285" r="28" stroke-width="7"/>
+<circle cx="1730" cy="1325" r="28" stroke-width="7"/>
+<circle cx="1683" cy="1310" r="28" stroke-width="7"/>
+<circle cx="1683" cy="1260" r="28" stroke-width="7"/>
+<circle cx="1730" cy="1245" r="28" stroke-width="7"/>
+<circle cx="1717" cy="1285" r="25" stroke-width="7"/>
+<circle cx="360" cy="430" r="110" stroke-width="8"/>
+<ellipse cx="360" cy="430" rx="55" ry="80" stroke-width="6"/>
+<path d="M 290 430 L 430 430 M 360 340 L 360 520" stroke-width="6"/>
+<circle cx="2190" cy="430" r="110" stroke-width="8"/>
+<ellipse cx="2190" cy="430" rx="55" ry="80" stroke-width="6"/>
+<path d="M 2120 430 L 2260 430 M 2190 340 L 2190 520" stroke-width="6"/>
+<circle cx="360" cy="2670" r="110" stroke-width="8"/>
+<ellipse cx="360" cy="2670" rx="55" ry="80" stroke-width="6"/>
+<path d="M 290 2670 L 430 2670 M 360 2580 L 360 2760" stroke-width="6"/>
+<circle cx="2190" cy="2670" r="110" stroke-width="8"/>
+<ellipse cx="2190" cy="2670" rx="55" ry="80" stroke-width="6"/>
+<path d="M 2120 2670 L 2260 2670 M 2190 2580 L 2190 2760" stroke-width="6"/>
+<circle cx="1275" cy="1540" r="60" stroke-width="8"/>
+<circle cx="1275" cy="1540" r="18" stroke-width="8"/>
+</g><text x="1275" y="3160" text-anchor="middle" font-family="Arial, sans-serif" font-size="120" font-weight="700" fill="black">Easter Mandala</text></svg>

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Easter With Dad</title>
+  <meta name="description" content="A polished Easter website from Dad to the kids with games, trivia, printable coloring pages, and fun links." />
+  <style>
+    :root {
+      --bg: #fff8fc;
+      --card: rgba(255,255,255,0.88);
+      --ink: #2d1833;
+      --muted: #6f5b76;
+      --pink: #ff5fa7;
+      --pink-dark: #d83d84;
+      --purple: #7a4bff;
+      --purple-dark: #5530ba;
+      --yellow: #ffd96a;
+      --mint: #bdf6d3;
+      --blue: #cce9ff;
+      --line: #ead8f3;
+      --shadow: 0 18px 40px rgba(95, 48, 138, 0.14);
+      --radius: 24px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Avenir Next", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 95, 167, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(122, 75, 255, 0.14), transparent 32%),
+        linear-gradient(180deg, #fffafc 0%, #fff7ef 42%, #fefcff 100%);
+      line-height: 1.55;
+    }
+
+    a { color: var(--purple-dark); }
+    a:hover { color: var(--pink-dark); }
+
+    .wrap {
+      width: min(calc(100% - 28px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: rgba(255, 250, 253, 0.78);
+      border-bottom: 1px solid rgba(122, 75, 255, 0.08);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 70px;
+    }
+
+    .brand {
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--purple-dark);
+      font-size: 1rem;
+    }
+
+    .brand small {
+      display: block;
+      font-size: .72rem;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: .92rem;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: .18s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      padding: 42px 0 24px;
+    }
+
+    .hero-box {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-main,
+    .hero-side,
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(122, 75, 255, 0.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -60px auto;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,217,106,0.4), rgba(255,217,106,0));
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,95,167,.14), rgba(122,75,255,.10));
+      font-weight: 900;
+      color: var(--pink-dark);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .75rem;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.08;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 5vw, 4.5rem);
+      margin-top: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-main p {
+      max-width: 62ch;
+      margin: 16px 0 0;
+      font-size: 1.06rem;
+      color: #41294d;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border: 0;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 13px 18px;
+      font-weight: 900;
+      font-size: .95rem;
+      transition: .18s ease;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white;
+      box-shadow: 0 12px 30px rgba(122, 75, 255, 0.24);
+    }
+
+    .button.secondary {
+      background: white;
+      color: var(--purple-dark);
+      border: 1px solid rgba(122, 75, 255, .14);
+    }
+
+    .button:hover { transform: translateY(-2px); }
+
+    .hero-side {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .mini {
+      padding: 16px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid var(--line);
+      min-height: 120px;
+    }
+
+    .mini strong {
+      display: block;
+      font-size: 1.45rem;
+      color: var(--purple-dark);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .mini span {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .92rem;
+    }
+
+    .section {
+      padding: 26px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 64ch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(122,75,255,.08);
+      color: var(--purple-dark);
+      font-size: .86rem;
+      font-weight: 800;
+    }
+
+    .game-shell {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .memory-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .memory-card {
+      aspect-ratio: 1 / 1;
+      border: 0;
+      border-radius: 18px;
+      font-size: clamp(1.8rem, 3.4vw, 2.3rem);
+      cursor: pointer;
+      font-weight: 900;
+      background: linear-gradient(180deg, #fff, #ffeef6);
+      box-shadow: inset 0 0 0 1px rgba(122,75,255,.10);
+      transition: transform .14s ease, box-shadow .14s ease;
+    }
+
+    .memory-card:hover { transform: translateY(-1px); }
+    .memory-card.matched { background: linear-gradient(180deg, #eafdf1, #d7f8e5); }
+    .memory-card.flipped { background: linear-gradient(180deg, #fff8d6, #fff1b7); }
+
+    .egg-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .egg-tile {
+      border: 0;
+      padding: 0;
+      aspect-ratio: 1 / 1;
+      border-radius: 18px;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      cursor: pointer;
+      background: linear-gradient(180deg, #fff, #eef7ff);
+      box-shadow: inset 0 0 0 1px rgba(122,75,255,.10);
+      transition: transform .14s ease;
+    }
+
+    .egg-tile:hover { transform: translateY(-1px) scale(1.02); }
+    .egg-tile.found { background: linear-gradient(180deg, #fff1c8, #ffe499); }
+    .egg-tile.bunny { background: linear-gradient(180deg, #ffe8f4, #ffd0e7); }
+
+    .quiz-answers {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .answer {
+      width: 100%;
+      text-align: left;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: white;
+      padding: 12px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .answer.correct { background: #e7fbec; border-color: #98ddb1; }
+    .answer.wrong { background: #fff0f2; border-color: #ff9cb7; }
+
+    .status {
+      min-height: 24px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .trivia-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .fact {
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(250,245,255,.92));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 18px;
+    }
+
+    .fact strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--purple-dark);
+    }
+
+    .links-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .link-card {
+      display: grid;
+      gap: 6px;
+      text-decoration: none;
+      color: inherit;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      transition: .18s ease;
+    }
+
+    .link-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .link-card small {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .print-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .print-card {
+      background: linear-gradient(180deg, #fff, #fff6fb);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .print-card h3 { margin-bottom: 8px; }
+
+    .source-list {
+      display: grid;
+      gap: 10px;
+      font-size: .98rem;
+    }
+
+    .footer {
+      padding: 28px 0 48px;
+      color: var(--muted);
+      text-align: center;
+      font-size: .95rem;
+    }
+
+    ul.clean {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-box,
+      .grid-3,
+      .grid-2,
+      .print-grid { grid-template-columns: 1fr; }
+      .memory-board { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    @media (max-width: 720px) {
+      .nav { padding: 10px 0; align-items: start; }
+      .nav-links { justify-content: flex-start; }
+      .memory-board { grid-template-columns: repeat(4, 1fr); }
+      .egg-grid { grid-template-columns: repeat(5, 1fr); }
+      .hero-main, .hero-side, .card { padding: 18px; }
+      .mini-grid { grid-template-columns: 1fr 1fr; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap nav">
+      <div class="brand">Easter With Dad<small>Games, trivia, coloring pages, and fun links</small></div>
+      <div class="nav-links">
+        <a href="#games">Games</a>
+        <a href="#trivia">Trivia</a>
+        <a href="#printables">Printables</a>
+        <a href="#links">Links</a>
+        <a href="#sources">Sources</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap hero-box">
+      <section class="hero-main">
+        <div class="eyebrow">🐣 Built by Dad for the kids</div>
+        <h1>Happy Easter,<br />you magnificent little candy gremlins.</h1>
+        <p>
+          This Easter page is packed with games, bright facts, printable coloring pages,
+          hand-picked kid-friendly links, and a pile of springtime fun. It is made to feel
+          like a real little holiday world instead of one more sad page floating around the
+          internet pretending to be magical.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#games">Play the games</a>
+          <a class="button secondary" href="printables/coloring-book.html" target="_blank" rel="noopener">Open the coloring book</a>
+        </div>
+        <div class="chip-row">
+          <span class="chip">🎨 Printable art pages</span>
+          <span class="chip">🧠 Real Easter facts</span>
+          <span class="chip">🐰 Kid-safe web links</span>
+          <span class="chip">🥚 Built-in games</span>
+        </div>
+      </section>
+
+      <aside class="hero-side">
+        <div class="mini-grid">
+          <div class="mini"><strong>4</strong><span>printable coloring pages</span></div>
+          <div class="mini"><strong>3</strong><span>built-in Easter games</span></div>
+          <div class="mini"><strong>8</strong><span>real Easter facts and trivia</span></div>
+          <div class="mini"><strong>5</strong><span>hand-picked kids links</span></div>
+        </div>
+        <div class="card" style="padding:18px; margin:0;">
+          <h3>Dad note</h3>
+          <p style="margin:8px 0 0; color:var(--muted);">
+            Whether you are coloring, clicking, guessing trivia, or just looking for a tiny
+            bit of Easter fun, this page is for you.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section id="games" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Games</div>
+            <h2>Play first. Civilization later.</h2>
+            <p>Three built-in mini games, all in one page, because apparently children enjoy fun and not tax paperwork.</p>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <article class="card game-shell">
+            <div>
+              <h3>🥚 Egg Match Memory</h3>
+              <p>Flip the eggs and match the symbols. Clear the whole board to win.</p>
+            </div>
+            <div id="memoryBoard" class="memory-board" aria-label="Egg match memory board"></div>
+            <div class="status" id="memoryStatus">Matches found: 0 of 8</div>
+            <button class="button secondary" id="memoryReset" type="button">Reset memory game</button>
+          </article>
+
+          <article class="card game-shell">
+            <div>
+              <h3>🐰 Find the Bunny</h3>
+              <p>One bunny and a bunch of eggs are hiding in the field. Find the bunny in as few clicks as possible.</p>
+            </div>
+            <div id="eggGrid" class="egg-grid" aria-label="Find the bunny game grid"></div>
+            <div class="status" id="eggStatus">Clicks: 0</div>
+            <button class="button secondary" id="eggReset" type="button">Hide the bunny again</button>
+          </article>
+
+          <article class="card game-shell">
+            <div>
+              <h3>🧠 Easter Trivia Quiz</h3>
+              <p id="quizQuestion">Loading question...</p>
+            </div>
+            <div id="quizAnswers" class="quiz-answers"></div>
+            <div class="status" id="quizStatus">Score: 0 of 0</div>
+            <button class="button secondary" id="quizNext" type="button">Next question</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="trivia" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Trivia + Facts</div>
+            <h2>Real Easter facts, minus the boring lecture voice.</h2>
+            <p>These are kid-friendly summaries based on established reference and educational sources listed at the bottom of the page.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card trivia-list">
+            <div class="fact"><strong>What Easter celebrates</strong>Easter is the holiest day in Christianity. It celebrates the resurrection of Jesus, which means rising from the dead.</div>
+            <div class="fact"><strong>Why eggs are part of Easter</strong>Eggs became symbols of new life and, in Christian tradition, of the Resurrection. Decorating eggs has been recorded for centuries.</div>
+            <div class="fact"><strong>Where the Easter Bunny comes from</strong>The rabbit became part of Easter traditions in Protestant parts of Europe in the 1600s. In the United States, the tradition is often linked to German immigrants in the 1700s.</div>
+            <div class="fact"><strong>Why the date moves</strong>Easter does not stay on the same calendar day each year. It is a movable feast, which is why it can fall on different Sundays in March or April.</div>
+          </div>
+          <div class="card trivia-list">
+            <div class="fact"><strong>Colorful eggs around the world</strong>Different countries celebrate with different egg customs. In some traditions, eggs are dyed red, while in others they are painted, hidden, rolled, or given as gifts.</div>
+            <div class="fact"><strong>The White House Easter Egg Roll</strong>In the United States, the White House Easter Egg Roll has been held, with interruptions, since 1878.</div>
+            <div class="fact"><strong>Spring symbols</strong>Bunnies, chicks, flowers, and eggs are all tied to spring and new life, which is why they show up all over Easter celebrations.</div>
+            <div class="fact"><strong>Easter Monday</strong>In some countries and communities, the day after Easter is also a holiday called Easter Monday.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="printables" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Printables</div>
+            <h2>Coloring pages with actual effort put into them.</h2>
+            <p>Open the full coloring book or print individual pages. These were built as clean black-and-white vector pages so they print sharply on normal paper.</p>
+          </div>
+        </div>
+        <div class="print-grid">
+          <div class="print-card">
+            <h3>📘 Full Coloring Book</h3>
+            <p>A print-ready booklet page with all four coloring pages linked in one clean place.</p>
+            <div class="chip-row">
+              <a class="button primary" href="printables/coloring-book.html" target="_blank" rel="noopener">Open coloring book</a>
+            </div>
+          </div>
+          <div class="print-card">
+            <h3>🖍️ Individual Pages</h3>
+            <ul class="clean">
+              <li><a href="printables/01-bunny-garden.svg" target="_blank" rel="noopener">Bunny Garden</a></li>
+              <li><a href="printables/02-ornate-egg.svg" target="_blank" rel="noopener">Ornate Easter Egg</a></li>
+              <li><a href="printables/03-spring-basket.svg" target="_blank" rel="noopener">Spring Basket</a></li>
+              <li><a href="printables/04-easter-mandala.svg" target="_blank" rel="noopener">Easter Mandala</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="links" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Good Links</div>
+            <h2>Kid-friendly Easter and spring sites worth clicking.</h2>
+            <p>These are external sites with coloring pages, puzzles, and activities. They are not part of this package, but they are useful when the built-in chaos is not enough.</p>
+          </div>
+        </div>
+        <div class="grid-3 links-list">
+          <a class="link-card" href="https://www.crayola.com/easter-coloring-pages" target="_blank" rel="noopener">
+            <strong>Crayola Easter Coloring Pages</strong>
+            <small>Free printable Easter coloring sheets with bunnies, eggs, and spring scenes.</small>
+          </a>
+          <a class="link-card" href="https://www.crayola.com/free-coloring-pages/print/easter-scramble-coloring-page" target="_blank" rel="noopener">
+            <strong>Crayola Easter Scramble</strong>
+            <small>A printable word scramble plus coloring page in one place.</small>
+          </a>
+          <a class="link-card" href="https://www.natgeokids.com/uk/primary-resource/easter-puzzles-primary-resource/" target="_blank" rel="noopener">
+            <strong>National Geographic Kids Easter Puzzles</strong>
+            <small>Printable puzzle activities with spring and Easter themes.</small>
+          </a>
+          <a class="link-card" href="https://www.education.com/resources/worksheets/?occasion=easter" target="_blank" rel="noopener">
+            <strong>Education.com Easter Worksheets</strong>
+            <small>Holiday worksheets, puzzles, and activity pages for a range of ages.</small>
+          </a>
+          <a class="link-card" href="https://kids.britannica.com/kids/article/Easter/353077" target="_blank" rel="noopener">
+            <strong>Britannica Kids: Easter</strong>
+            <small>A kid-friendly encyclopedia entry about Easter and its traditions.</small>
+          </a>
+          <a class="link-card" href="https://www.crayola.com/free-coloring-pages/print/easter-bunny-coloring-page" target="_blank" rel="noopener">
+            <strong>Crayola Easter Bunny Page</strong>
+            <small>A simple printable bunny coloring page for extra art time.</small>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="sources" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Sources</div>
+            <h2>Where the factual bits came from.</h2>
+            <p>This page mixes custom design and games with educational references. These source links back up the history and trivia sections.</p>
+          </div>
+        </div>
+        <div class="card source-list">
+          <div><a href="https://kids.britannica.com/kids/article/Christianity/352957" target="_blank" rel="noopener">Britannica Kids: Christianity</a> for Easter as the holiest day in Christianity.</div>
+          <div><a href="https://www.britannica.com/story/what-do-eggs-have-to-do-with-easter" target="_blank" rel="noopener">Britannica: Why is Easter celebrated with eggs?</a> for egg symbolism and the White House Easter Egg Roll.</div>
+          <div><a href="https://www.history.com/articles/easter-symbols" target="_blank" rel="noopener">History: Easter traditions, bunny, and eggs</a> for the long history of decorated eggs.</div>
+          <div><a href="https://kids.britannica.com/students/article/Easter/274106" target="_blank" rel="noopener">Britannica Kids Students: Easter</a> for the Easter rabbit tradition in Protestant Europe.</div>
+          <div><a href="https://www.history.com/articles/history-of-easter" target="_blank" rel="noopener">History: Date, Meaning & Easter Eggs</a> for the U.S. tradition being linked to German immigrants.</div>
+          <div><a href="https://www.history.com/articles/what-is-easter-monday" target="_blank" rel="noopener">History: What Is Easter Monday?</a> for Easter Monday context.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="wrap footer">
+    Made with love, sugar, and suspiciously high standards for spacing.
+  </div>
+
+  <script>
+    // Memory game
+    const memorySymbols = ['🐰','🥚','🐣','🌷','🧺','🍬','🌼','🥕'];
+    const memoryBoard = document.getElementById('memoryBoard');
+    const memoryStatus = document.getElementById('memoryStatus');
+    const memoryReset = document.getElementById('memoryReset');
+    let memoryState = { cards: [], flipped: [], matched: 0, lock: false };
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function renderMemory() {
+      const symbols = shuffle([...memorySymbols, ...memorySymbols]);
+      memoryState = { cards: symbols, flipped: [], matched: 0, lock: false };
+      memoryBoard.innerHTML = '';
+      symbols.forEach((symbol, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'memory-card';
+        btn.type = 'button';
+        btn.dataset.index = index;
+        btn.dataset.symbol = symbol;
+        btn.textContent = '❓';
+        btn.addEventListener('click', onMemoryClick);
+        memoryBoard.appendChild(btn);
+      });
+      memoryStatus.textContent = 'Matches found: 0 of 8';
+    }
+
+    function onMemoryClick(e) {
+      const btn = e.currentTarget;
+      const idx = Number(btn.dataset.index);
+      if (memoryState.lock || memoryState.flipped.includes(idx) || btn.classList.contains('matched')) return;
+      btn.classList.add('flipped');
+      btn.textContent = btn.dataset.symbol;
+      memoryState.flipped.push(idx);
+
+      if (memoryState.flipped.length === 2) {
+        memoryState.lock = true;
+        const [a, b] = memoryState.flipped;
+        const aEl = memoryBoard.children[a];
+        const bEl = memoryBoard.children[b];
+        if (aEl.dataset.symbol === bEl.dataset.symbol) {
+          aEl.classList.add('matched');
+          bEl.classList.add('matched');
+          memoryState.matched += 1;
+          memoryState.flipped = [];
+          memoryState.lock = false;
+          memoryStatus.textContent = `Matches found: ${memoryState.matched} of 8`;
+          if (memoryState.matched === 8) {
+            memoryStatus.textContent = 'You matched every pair. Certified egg genius.';
+          }
+        } else {
+          setTimeout(() => {
+            [aEl, bEl].forEach(el => {
+              el.classList.remove('flipped');
+              el.textContent = '❓';
+            });
+            memoryState.flipped = [];
+            memoryState.lock = false;
+            memoryStatus.textContent = `Matches found: ${memoryState.matched} of 8`;
+          }, 700);
+        }
+      }
+    }
+
+    memoryReset.addEventListener('click', renderMemory);
+    renderMemory();
+
+    // Find the bunny game
+    const eggGrid = document.getElementById('eggGrid');
+    const eggStatus = document.getElementById('eggStatus');
+    const eggReset = document.getElementById('eggReset');
+    let bunnyIndex = 0;
+    let eggClicks = 0;
+    let bunnyFound = false;
+
+    function renderEggGrid() {
+      eggGrid.innerHTML = '';
+      bunnyIndex = Math.floor(Math.random() * 25);
+      eggClicks = 0;
+      bunnyFound = false;
+      eggStatus.textContent = 'Clicks: 0';
+      for (let i = 0; i < 25; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'egg-tile';
+        btn.type = 'button';
+        btn.textContent = '🥚';
+        btn.addEventListener('click', () => {
+          if (btn.classList.contains('found') || bunnyFound) return;
+          eggClicks += 1;
+          if (i === bunnyIndex) {
+            btn.textContent = '🐰';
+            btn.classList.add('bunny');
+            bunnyFound = true;
+            eggStatus.textContent = `You found the bunny in ${eggClicks} click${eggClicks === 1 ? '' : 's'}!`;
+          } else {
+            btn.textContent = '🌼';
+            btn.classList.add('found');
+            eggStatus.textContent = `Clicks: ${eggClicks}`;
+          }
+        });
+        eggGrid.appendChild(btn);
+      }
+    }
+
+    eggReset.addEventListener('click', renderEggGrid);
+    renderEggGrid();
+
+    // Trivia quiz
+    const quizQuestion = document.getElementById('quizQuestion');
+    const quizAnswers = document.getElementById('quizAnswers');
+    const quizStatus = document.getElementById('quizStatus');
+    const quizNext = document.getElementById('quizNext');
+
+    const quizData = [
+      {
+        q: 'What does Easter celebrate in Christianity?',
+        options: ['A giant chocolate rabbit', 'The resurrection of Jesus', 'The first spring flower', 'A famous egg race'],
+        answer: 1,
+        note: 'Correct. Easter celebrates the resurrection of Jesus.'
+      },
+      {
+        q: 'Why are eggs often used as Easter symbols?',
+        options: ['They symbolize new life', 'They are easier than pumpkins', 'They were invented in spring', 'They always glow in the dark'],
+        answer: 0,
+        note: 'Correct. Eggs became symbols of new life and renewal.'
+      },
+      {
+        q: 'Which animal is most associated with Easter traditions in many places?',
+        options: ['Fox', 'Turtle', 'Rabbit or bunny', 'Owl'],
+        answer: 2,
+        note: 'Correct. The rabbit or bunny became a major Easter symbol.'
+      },
+      {
+        q: 'What country is often linked to bringing the Easter Bunny tradition to America?',
+        options: ['Germany', 'Brazil', 'Australia', 'Japan'],
+        answer: 0,
+        note: 'Correct. The U.S. tradition is often linked to German immigrants.'
+      },
+      {
+        q: 'What is the event on the White House lawn called?',
+        options: ['The Presidential Basket Toss', 'The White House Easter Egg Roll', 'The Oval Office Bunny Run', 'The Egg Parade of Doom'],
+        answer: 1,
+        note: 'Correct. It is called the White House Easter Egg Roll.'
+      }
+    ];
+
+    let quizPool = [];
+    let quizScore = 0;
+    let quizAsked = 0;
+    let currentQuiz = null;
+    let quizLocked = false;
+
+    function nextQuizQuestion() {
+      if (!quizPool.length) quizPool = shuffle(quizData);
+      currentQuiz = quizPool.pop();
+      quizLocked = false;
+      quizQuestion.textContent = currentQuiz.q;
+      quizAnswers.innerHTML = '';
+      currentQuiz.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer';
+        btn.type = 'button';
+        btn.textContent = option;
+        btn.addEventListener('click', () => answerQuiz(index, btn));
+        quizAnswers.appendChild(btn);
+      });
+      quizStatus.textContent = `Score: ${quizScore} of ${quizAsked}`;
+    }
+
+    function answerQuiz(index, button) {
+      if (quizLocked) return;
+      quizLocked = true;
+      const buttons = [...quizAnswers.querySelectorAll('.answer')];
+      buttons.forEach((btn, i) => {
+        if (i === currentQuiz.answer) btn.classList.add('correct');
+      });
+      if (index === currentQuiz.answer) {
+        quizScore += 1;
+      } else {
+        button.classList.add('wrong');
+      }
+      quizAsked += 1;
+      quizStatus.textContent = `${currentQuiz.note} Score: ${quizScore} of ${quizAsked}`;
+    }
+
+    quizNext.addEventListener('click', nextQuizQuestion);
+    nextQuizQuestion();
+  </script>
+</body>
+</html>

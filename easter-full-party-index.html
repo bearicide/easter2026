@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Easter Mega Party Arcade</title>
+  <meta name="description" content="A huge mobile-friendly Easter arcade with a neon slot machine, bonus games, loud sounds, sparkles, and ridiculous party-mode buttons." />
+  <style>
+    :root{
+      --bg1:#fff6fd;
+      --bg2:#fff8df;
+      --bg3:#eefcff;
+      --ink:#35144f;
+      --ink2:#5a3478;
+      --white:#ffffff;
+      --pink:#ff43ad;
+      --hot:#ff0c8d;
+      --purple:#8d59ff;
+      --deep:#5a30d0;
+      --blue:#4ddfff;
+      --cyan:#90f4ff;
+      --green:#6df985;
+      --mint:#bcffd6;
+      --yellow:#ffe15d;
+      --gold:#ffb630;
+      --orange:#ff9550;
+      --red:#ff5b71;
+      --glass:rgba(255,255,255,.78);
+      --line:rgba(122,89,255,.15);
+      --shadow:0 18px 50px rgba(90,48,208,.18);
+      --shadow-strong:0 28px 80px rgba(90,48,208,.3);
+      --glowPink:0 0 16px rgba(255,67,173,.9),0 0 38px rgba(255,67,173,.45);
+      --glowBlue:0 0 16px rgba(77,223,255,.95),0 0 36px rgba(77,223,255,.45);
+      --glowYellow:0 0 16px rgba(255,225,93,.95),0 0 36px rgba(255,225,93,.5);
+      --glowGreen:0 0 16px rgba(109,249,133,.95),0 0 36px rgba(109,249,133,.5);
+      --radius:28px;
+      --radius2:20px;
+      --max:1400px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:"Trebuchet MS","Avenir Next",Arial,sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,67,173,.18), transparent 24%),
+        radial-gradient(circle at 90% 10%, rgba(77,223,255,.16), transparent 22%),
+        radial-gradient(circle at 18% 90%, rgba(109,249,133,.16), transparent 24%),
+        radial-gradient(circle at 84% 84%, rgba(255,182,48,.18), transparent 22%),
+        linear-gradient(180deg,var(--bg1),var(--bg2) 42%,var(--bg3));
+      line-height:1.45;
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+    body.party .pulse-fast,
+    body.party .hero-title,
+    body.party .jackpot,
+    body.party .big-button,
+    body.party .section-glow,
+    body.party .reel-window,
+    body.party .stat-chip{
+      animation-duration:.55s!important;
+    }
+    body.screen-flash::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle, rgba(255,255,255,.95), rgba(255,255,255,.15), transparent 70%);
+      z-index:1000;
+      pointer-events:none;
+      animation:flashPop .45s ease-out;
+    }
+    a{color:var(--deep)}
+    a:hover{color:var(--hot)}
+    .wrap{width:min(calc(100% - 24px),var(--max));margin:0 auto;position:relative;z-index:1}
+    .ambient{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+    .orb{position:absolute;border-radius:50%;filter:blur(10px);opacity:.45;animation:floaty 12s ease-in-out infinite}
+    .orb.o1{width:220px;height:220px;left:-30px;top:80px;background:radial-gradient(circle, rgba(255,67,173,.75), transparent 70%)}
+    .orb.o2{width:260px;height:260px;right:-60px;top:120px;background:radial-gradient(circle, rgba(77,223,255,.75), transparent 70%);animation-delay:-4s}
+    .orb.o3{width:280px;height:280px;left:12%;bottom:-90px;background:radial-gradient(circle, rgba(255,225,93,.7), transparent 70%);animation-delay:-8s}
+    .orb.o4{width:220px;height:220px;right:12%;bottom:30px;background:radial-gradient(circle, rgba(109,249,133,.7), transparent 70%);animation-delay:-2s}
+    .spark-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+    .spark{
+      position:absolute;
+      width:12px;height:12px;
+      border-radius:50%;
+      background:radial-gradient(circle,#fff,var(--yellow),transparent 72%);
+      filter:drop-shadow(0 0 10px rgba(255,255,255,.9));
+      animation:sparkFly 1.6s ease-out forwards;
+      transform:translate(-50%,-50%);
+    }
+    .spark::before,.spark::after{
+      content:"";position:absolute;left:50%;top:50%;width:2px;height:18px;background:linear-gradient(180deg, transparent, #fff, transparent);transform:translate(-50%,-50%);
+    }
+    .spark::after{transform:translate(-50%,-50%) rotate(90deg)}
+
+    .topbar{
+      position:sticky;top:0;z-index:40;
+      backdrop-filter:blur(18px);
+      background:rgba(255,255,255,.78);
+      border-bottom:1px solid rgba(122,89,255,.12);
+      box-shadow:0 10px 20px rgba(90,48,208,.08);
+    }
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:74px;padding:10px 0}
+    .brand{display:grid;gap:3px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+    .brand-main{font-size:1rem;color:var(--deep);text-shadow:var(--glowBlue)}
+    .brand small{font-size:.75rem;text-transform:none;color:var(--ink2);letter-spacing:normal}
+    .nav-links{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .pill,.tiny-btn{
+      border:none;text-decoration:none;cursor:pointer;
+      border-radius:999px;padding:11px 14px;font-weight:900;font-size:.9rem;
+      background:rgba(255,255,255,.84);color:var(--ink);box-shadow:0 8px 18px rgba(90,48,208,.08);border:1px solid rgba(122,89,255,.12);
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+    .pill:hover,.tiny-btn:hover,.button:hover,.big-button:hover{transform:translateY(-2px) scale(1.01);box-shadow:var(--shadow)}
+
+    .hero{padding:24px 0 18px}
+    .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:18px;align-items:stretch}
+    .panel,.card,.hero-main,.hero-side,.slot-shell,.game-card,.mega-panel,.iframe-shell,.modal-card{
+      background:var(--glass);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius);backdrop-filter:blur(14px);
+    }
+    .hero-main{position:relative;overflow:hidden;padding:30px}
+    .hero-main::before,.hero-main::after{content:"";position:absolute;inset:auto auto -24px -24px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(255,67,173,.22), transparent 65%)}
+    .hero-main::after{inset:-30px -40px auto auto;background:radial-gradient(circle, rgba(77,223,255,.22), transparent 65%)}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.85);font-weight:900;box-shadow:var(--glowYellow);margin-bottom:14px}
+    .hero-title{font-size:clamp(2.3rem,5vw,4.8rem);line-height:.92;margin:.08em 0 .12em;font-weight:1000;letter-spacing:-.03em;text-shadow:var(--glowPink),var(--glowBlue);animation:pulseGlow 1.7s infinite alternate}
+    .hero-sub{font-size:1.08rem;max-width:62ch;color:var(--ink2);margin:0 0 18px}
+    .button-row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+    .button,.big-button{
+      appearance:none;border:none;border-radius:18px;padding:14px 18px;font-weight:1000;font-size:1rem;cursor:pointer;color:var(--ink);
+      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,240,255,.96));
+      box-shadow:var(--shadow);border:1px solid rgba(122,89,255,.14);transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+    .button.primary,.big-button.primary{background:linear-gradient(180deg,#fff7a9,#ffe15d 55%,#ffbf3a);box-shadow:var(--glowYellow),var(--shadow)}
+    .button.hot,.big-button.hot{background:linear-gradient(180deg,#ffb2dd,#ff66be 55%,#ff2f9f);color:#fff;box-shadow:var(--glowPink),var(--shadow)}
+    .button.cool,.big-button.cool{background:linear-gradient(180deg,#d8f9ff,#90f4ff 58%,#46dcff);box-shadow:var(--glowBlue),var(--shadow)}
+    .button.green,.big-button.green{background:linear-gradient(180deg,#e5ffef,#adffc1 55%,#58e97a);box-shadow:var(--glowGreen),var(--shadow)}
+    .button.rainbow,.big-button.rainbow{background:linear-gradient(90deg,#ff98d0,#ffd85d,#9ff6ff,#9dffbf,#c6a0ff);box-shadow:var(--glowPink),var(--glowBlue),var(--shadow)}
+    .button.small{padding:10px 12px;font-size:.92rem;border-radius:14px}
+    .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+    .stat-chip{padding:15px 12px;border-radius:18px;background:rgba(255,255,255,.86);text-align:center;border:1px solid rgba(122,89,255,.12);font-weight:900;box-shadow:0 10px 22px rgba(90,48,208,.08);animation:pulseGlow 2.5s infinite alternate}
+    .stat-chip strong{display:block;font-size:1.5rem;color:var(--deep)}
+    .hero-side{padding:18px;display:grid;gap:14px}
+    .marquee{padding:14px 16px;border-radius:22px;overflow:hidden;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,244,197,.95),rgba(255,219,242,.95),rgba(210,247,255,.95));box-shadow:var(--glowYellow),var(--shadow)}
+    .marquee-track{display:flex;gap:26px;white-space:nowrap;font-weight:1000;font-size:1rem;animation:marqueeMove 15s linear infinite}
+    .score-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .score-badge{padding:18px;border-radius:22px;background:rgba(255,255,255,.88);font-weight:900;box-shadow:0 12px 24px rgba(90,48,208,.08);border:1px solid rgba(122,89,255,.12)}
+    .score-badge strong{display:block;font-size:2rem;line-height:1;color:var(--hot);margin-bottom:6px}
+    .mini-card{padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.9);border:1px solid rgba(122,89,255,.12)}
+    .section{padding:16px 0 24px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:14px;margin:0 0 14px}
+    .section-head h2{font-size:clamp(1.7rem,3vw,3rem);margin:.1em 0 .1em;line-height:1}
+    .section-head p{margin:0;color:var(--ink2);max-width:70ch}
+    .section-glow{animation:pulseGlow 2.2s infinite alternate}
+
+    .slot-shell{padding:18px;overflow:hidden;position:relative}
+    .slot-shell::before{content:"";position:absolute;inset:-50% auto auto -10%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,.35), transparent 70%);pointer-events:none}
+    .slot-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .slot-title{font-size:clamp(1.7rem,4vw,3rem);font-weight:1000;line-height:.95;margin:0;text-shadow:var(--glowPink),var(--glowYellow)}
+    .slot-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:16px;margin-top:14px}
+    .machine{padding:16px;border-radius:26px;background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(250,240,255,.95));border:2px solid rgba(122,89,255,.18);box-shadow:var(--shadow-strong);position:relative;overflow:hidden}
+    .machine::after{content:"";position:absolute;inset:auto -80px -80px auto;width:220px;height:220px;background:radial-gradient(circle, rgba(77,223,255,.22), transparent 68%);pointer-events:none}
+    .jackpot{padding:14px 18px;text-align:center;font-weight:1000;font-size:clamp(1.4rem,3vw,2.7rem);border-radius:18px;background:linear-gradient(90deg,#ffb2dd,#fff2a6,#baf9ff,#bfffd2,#d9bbff);box-shadow:var(--glowPink),var(--glowYellow),var(--glowBlue);animation:pulseGlow 1.4s infinite alternate}
+    .reels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+    .reel-window{position:relative;height:180px;border-radius:22px;padding:10px;background:linear-gradient(180deg,#fffdf4,#fff);border:2px solid rgba(122,89,255,.16);overflow:hidden;box-shadow:inset 0 0 0 6px rgba(255,225,93,.15), 0 16px 30px rgba(90,48,208,.12);animation:pulseGlow 2s infinite alternate}
+    .reel-window.spinning .reel-strip{animation:spinStrip .16s linear infinite}
+    .reel-window.win{box-shadow:var(--glowYellow), var(--glowPink), inset 0 0 0 6px rgba(255,225,93,.25), 0 16px 30px rgba(90,48,208,.12)}
+    .reel-mask{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,.98), transparent 20%, transparent 80%, rgba(255,255,255,.98))}
+    .payline{position:absolute;left:8px;right:8px;top:50%;height:4px;border-radius:999px;transform:translateY(-50%);background:linear-gradient(90deg,transparent, rgba(255,67,173,.75), rgba(255,225,93,.95), rgba(77,223,255,.75), transparent);box-shadow:0 0 18px rgba(255,255,255,.95)}
+    .reel-strip{display:flex;flex-direction:column;gap:8px;transform:translateY(-48px)}
+    .symbol{height:48px;border-radius:18px;display:grid;place-items:center;font-size:2rem;background:linear-gradient(180deg,#fff, #fff4fa);border:1px solid rgba(122,89,255,.08)}
+    .slot-info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .stat{padding:12px;border-radius:18px;background:rgba(255,255,255,.9);text-align:center;font-weight:900;border:1px solid rgba(122,89,255,.1)}
+    .stat .label{display:block;font-size:.76rem;color:var(--ink2);margin-bottom:3px}
+    .stat .value{display:block;font-size:1.24rem}
+    .slot-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .control-stack{display:flex;gap:10px;flex-wrap:wrap}
+    .paytable,.action-wall{padding:16px;border-radius:24px;background:rgba(255,255,255,.9);border:1px solid rgba(122,89,255,.12)}
+    .paytable h3,.action-wall h3,.game-card h3,.mega-panel h3,.iframe-shell h3{margin:.1em 0 .4em;font-size:1.25rem}
+    .pay-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed rgba(122,89,255,.16);font-weight:900}
+    .pay-row:last-child{border-bottom:none}
+    .meter{height:14px;border-radius:999px;background:rgba(90,48,208,.08);overflow:hidden;margin-top:10px}
+    .meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#ff65be,#ffe15d,#90f4ff,#6df985);transition:width .25s ease}
+
+    .action-grid,.games-grid,.links-grid{display:grid;gap:14px}
+    .action-grid{grid-template-columns:repeat(4,1fr)}
+    .games-grid{grid-template-columns:repeat(3,1fr)}
+    .links-grid{grid-template-columns:repeat(3,1fr)}
+    .game-card,.mega-panel,.iframe-shell{padding:18px;position:relative;overflow:hidden}
+    .game-card::before,.mega-panel::before{content:"";position:absolute;inset:auto auto -50px -50px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle, rgba(255,225,93,.18), transparent 72%);pointer-events:none}
+    .status{margin:10px 0 0;font-weight:900;color:var(--ink2)}
+    .mini-note{margin:0;color:var(--ink2)}
+    .board{margin-top:14px}
+
+    .memory-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .memory-card{aspect-ratio:1;border:none;border-radius:18px;background:linear-gradient(180deg,#ffe3f4,#fff3b2,#d9fbff);font-size:1.8rem;font-weight:900;cursor:pointer;box-shadow:0 10px 20px rgba(90,48,208,.1);position:relative;transition:transform .16s ease, filter .16s ease}
+    .memory-card:hover{transform:translateY(-2px)}
+    .memory-card .face{display:none}
+    .memory-card.flipped .back,.memory-card.matched .back{display:none}
+    .memory-card.flipped .face,.memory-card.matched .face{display:block}
+    .memory-card.matched{background:linear-gradient(180deg,#f3ffd6,#ccffda);box-shadow:var(--glowGreen)}
+
+    .hunt-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .hunt-tile{aspect-ratio:1;border:none;border-radius:16px;background:linear-gradient(180deg,#fff,#fff4fb);font-size:1.55rem;cursor:pointer;box-shadow:0 8px 18px rgba(90,48,208,.08)}
+    .hunt-tile.hit{background:linear-gradient(180deg,#fff6ba,#b9ffd2)}
+    .hunt-tile.miss{opacity:.7}
+
+    .whack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .hole{aspect-ratio:1;border-radius:22px;background:linear-gradient(180deg,#c4ffd4,#9cf0ff 55%,#ffd3ef);display:grid;place-items:end;padding:8px;overflow:hidden;position:relative;box-shadow:inset 0 -20px 0 rgba(90,48,208,.08), 0 12px 22px rgba(90,48,208,.1)}
+    .hole-btn{width:100%;height:100%;border:none;background:none;cursor:pointer;position:relative}
+    .bunny-pop{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%) translateY(110%);font-size:2.4rem;transition:transform .14s ease}
+    .hole.active .bunny-pop{transform:translateX(-50%) translateY(0)}
+    .hole.gold .bunny-pop{filter:drop-shadow(0 0 10px rgba(255,225,93,.8))}
+
+    .reaction-lights{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+    .reaction-light{height:56px;border-radius:16px;background:rgba(90,48,208,.08);box-shadow:inset 0 0 0 2px rgba(122,89,255,.08)}
+    .reaction-light.ready{background:linear-gradient(180deg,#fffcb6,#ffe15d);box-shadow:var(--glowYellow)}
+    .reaction-light.go{background:linear-gradient(180deg,#dfffe7,#6df985);box-shadow:var(--glowGreen)}
+    .reaction-light.bad{background:linear-gradient(180deg,#ffd7de,#ff657f);box-shadow:0 0 14px rgba(255,91,113,.7)}
+
+    .catch-area{position:relative;height:280px;border-radius:22px;background:linear-gradient(180deg,#dff7ff,#fff2d4 70%,#d4ffdf);overflow:hidden;border:1px solid rgba(122,89,255,.12);box-shadow:inset 0 -24px 0 rgba(90,48,208,.06)}
+    .falling{position:absolute;top:-40px;font-size:2rem;will-change:transform}
+    .basket{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:3rem;transition:left .08s linear}
+    .basket-controls{display:flex;gap:10px;justify-content:center;margin-top:12px}
+
+    .quiz-answers{display:grid;gap:8px;margin-top:12px}
+    .answer{border:none;border-radius:16px;padding:12px 14px;text-align:left;font-weight:900;background:linear-gradient(180deg,#fff,#f9efff);cursor:pointer;box-shadow:0 8px 16px rgba(90,48,208,.08)}
+    .answer.correct{background:linear-gradient(180deg,#e2ffe9,#9dffbf)}
+    .answer.wrong{background:linear-gradient(180deg,#ffdbe1,#ff8fa0)}
+
+    .mega-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+    .mega-info{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+
+    .iframe-shell iframe{width:100%;height:min(80vh,950px);border:none;border-radius:22px;box-shadow:0 12px 28px rgba(90,48,208,.16);background:#fff}
+
+    .source-list,.fact-list{display:grid;gap:10px}
+    .fact{padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.9);border:1px solid rgba(122,89,255,.1)}
+    .link-card{display:block;padding:18px;border-radius:22px;text-decoration:none;background:rgba(255,255,255,.9);border:1px solid rgba(122,89,255,.12);box-shadow:0 8px 18px rgba(90,48,208,.08)}
+    .link-card strong{display:block;font-size:1.05rem;margin-bottom:8px}
+    .footer{padding:18px 0 36px;color:var(--ink2);text-align:center;font-weight:900}
+
+    .overlay{position:fixed;inset:0;background:rgba(30,10,60,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:80;backdrop-filter:blur(6px)}
+    .overlay.open{display:flex}
+    .modal-card{width:min(100%,620px);padding:22px;position:relative;overflow:hidden}
+    .modal-card::before{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle, rgba(255,225,93,.25), transparent 70%)}
+    .bonus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+    .bonus-tile{aspect-ratio:1;border:none;border-radius:20px;background:linear-gradient(180deg,#fff,#fff5bf,#f8e4ff);font-size:2rem;font-weight:900;cursor:pointer;box-shadow:0 10px 20px rgba(90,48,208,.1)}
+    .bonus-tile.revealed{background:linear-gradient(180deg,#e7ffef,#b5ffca)}
+    .close-x{position:absolute;right:14px;top:14px}
+
+    @media (max-width: 1100px){
+      .hero-grid,.slot-grid{grid-template-columns:1fr}
+      .games-grid{grid-template-columns:repeat(2,1fr)}
+      .links-grid{grid-template-columns:repeat(2,1fr)}
+      .action-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width: 760px){
+      .nav{align-items:flex-start;padding:10px 0 12px}
+      .nav,.slot-top,.section-head{flex-direction:column;align-items:stretch}
+      .nav-links{justify-content:flex-start}
+      .hero-main,.hero-side,.slot-shell,.game-card,.mega-panel,.iframe-shell{padding:16px}
+      .hero-stats,.slot-info,.score-row,.mega-info{grid-template-columns:repeat(2,1fr)}
+      .games-grid,.links-grid,.action-grid{grid-template-columns:1fr}
+      .memory-board{grid-template-columns:repeat(4,1fr)}
+      .hunt-grid{grid-template-columns:repeat(5,1fr)}
+      .reaction-lights{grid-template-columns:repeat(5,1fr)}
+      .reel-window{height:150px}
+      .slot-title{font-size:2.15rem}
+      .hero-title{font-size:2.6rem}
+      .pill,.tiny-btn,.button,.big-button{font-size:.95rem}
+      .iframe-shell iframe{height:70vh}
+    }
+
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-24px)}}
+    @keyframes pulseGlow{from{filter:saturate(1) brightness(1)}to{filter:saturate(1.12) brightness(1.08)}}
+    @keyframes marqueeMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes spinStrip{from{transform:translateY(-48px)}to{transform:translateY(-104px)}}
+    @keyframes sparkFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}15%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.4)}}
+    @keyframes flashPop{from{opacity:1}to{opacity:0}}
+    .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+    <div class="orb o4"></div>
+  </div>
+  <div class="spark-layer" id="sparkLayer" aria-hidden="true"></div>
+
+  <div class="topbar">
+    <div class="wrap nav">
+      <div class="brand">
+        <div class="brand-main">🐰 Easter Mega Party Arcade ✨</div>
+        <small>One giant shiny page of neon bunny nonsense and suspiciously polished game design</small>
+      </div>
+      <div class="nav-links">
+        <a class="pill" href="#slot">🎰 Slot Party</a>
+        <a class="pill" href="#games">🎮 Games</a>
+        <a class="pill" href="#facts">🌷 Facts</a>
+        <a class="pill" href="#portal">🪺 Portal</a>
+        <button class="tiny-btn" id="soundToggle" type="button" aria-pressed="false">🔇 Sound Off</button>
+        <button class="tiny-btn" id="partyToggle" type="button" aria-pressed="false">🌈 Party Mode</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <section class="hero-main section-glow">
+        <div class="eyebrow">🐣 Built to be huge, loud, shiny, tappable, and aggressively Easter</div>
+        <h1 class="hero-title">Happy Easter.<br>Let the bunny casino begin.</h1>
+        <p class="hero-sub">
+          This full one-file build turns the original Easter page into a giant neon arcade with a slot machine,
+          bonus rounds, loud browser-safe synth sounds, massive buttons, sparkles, motion, and a stack of extra games.
+          It is mobile friendly, self-contained, and wildly overqualified for a holiday page because restraint is apparently canceled.
+        </p>
+        <div class="button-row">
+          <a class="button primary" href="#slot">🎰 Jump to the slot machine</a>
+          <a class="button cool" href="#games">🐰 Play the game zone</a>
+          <button class="button hot" id="testSoundBtn" type="button">🔊 Test Loud Sound</button>
+          <button class="button rainbow" id="megaSparkleBtn" type="button">✨ Mega Sparkle Burst</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-chip"><strong>7</strong>games</div>
+          <div class="stat-chip"><strong>1</strong>slot machine</div>
+          <div class="stat-chip"><strong>∞</strong>sparkles</div>
+          <div class="stat-chip"><strong>100%</strong>single file</div>
+        </div>
+      </section>
+      <aside class="hero-side">
+        <div class="marquee pulse-fast">
+          <div class="marquee-track">
+            <span>🐰 BIG EASTER JACKPOTS 🥚</span><span>✨ LOUD SOUNDS 🔊</span><span>🌈 PARTY MODE 🌈</span><span>🐣 FREE SPINS 🐣</span><span>🪺 BONUS PICKS 🪺</span><span>🎮 TAP GAMES 🎮</span><span>🐰 BIG EASTER JACKPOTS 🥚</span><span>✨ LOUD SOUNDS 🔊</span><span>🌈 PARTY MODE 🌈</span><span>🐣 FREE SPINS 🐣</span><span>🪺 BONUS PICKS 🪺</span><span>🎮 TAP GAMES 🎮</span>
+          </div>
+        </div>
+        <div class="score-row">
+          <div class="score-badge"><strong id="coinsHud">120</strong>coins</div>
+          <div class="score-badge"><strong id="ticketsHud">0</strong>tickets</div>
+        </div>
+        <div class="mini-card">
+          <h3>🎉 Party Buttons</h3>
+          <p class="mini-note">Turn on sound, smash big buttons, trigger sparkles, and launch a screen flash when something wins. Tiny holiday page? Not today.</p>
+          <div class="button-row" style="margin-top:12px">
+            <button class="button green small" id="flashBtn" type="button">⚡ Flash the page</button>
+            <button class="button rainbow small" id="rainBtn" type="button">🌟 Rain sparkles</button>
+            <button class="button hot small" id="luckyBtn" type="button">🍀 Lucky button</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section id="slot" class="section">
+      <div class="wrap slot-shell">
+        <div class="slot-top">
+          <div>
+            <div class="eyebrow">🎰 Easter Neon Slot Machine</div>
+            <h2 class="slot-title">Bunny Jackpot Blast</h2>
+            <p class="mini-note">Spin for coins, trigger free spins, land bunny triples for the bonus egg pick round, and collect tickets for the arcade board below.</p>
+          </div>
+          <div class="button-row" style="margin:0">
+            <button class="button green" id="spinBtn" type="button">🎰 Spin</button>
+            <button class="button primary" id="maxBetBtn" type="button">💥 Max Bet</button>
+            <button class="button cool" id="freeSpinBtn" type="button">🐣 Use Free Spin</button>
+          </div>
+        </div>
+
+        <div class="slot-grid">
+          <div class="machine">
+            <div class="jackpot" id="jackpotText">🐰 Easter Jackpot waiting for the next chaos goblin</div>
+            <div class="reels" aria-label="Slot machine reels">
+              <div class="reel-window" id="reel0"><div class="payline"></div><div class="reel-mask"></div><div class="reel-strip" id="strip0"></div></div>
+              <div class="reel-window" id="reel1"><div class="payline"></div><div class="reel-mask"></div><div class="reel-strip" id="strip1"></div></div>
+              <div class="reel-window" id="reel2"><div class="payline"></div><div class="reel-mask"></div><div class="reel-strip" id="strip2"></div></div>
+            </div>
+            <div class="slot-info">
+              <div class="stat"><span class="label">Coins</span><span class="value" id="coinsStat">120</span></div>
+              <div class="stat"><span class="label">Bet</span><span class="value" id="betStat">5</span></div>
+              <div class="stat"><span class="label">Free Spins</span><span class="value" id="freeSpinsStat">0</span></div>
+              <div class="stat"><span class="label">Last Win</span><span class="value" id="lastWinStat">0</span></div>
+            </div>
+            <div class="slot-controls">
+              <div class="control-stack">
+                <button class="button small" id="betDownBtn" type="button">➖ Bet</button>
+                <button class="button small" id="betUpBtn" type="button">➕ Bet</button>
+                <button class="button small hot" id="partySpinBtn" type="button">🌈 Party Spin</button>
+              </div>
+              <div class="control-stack">
+                <button class="button small cool" id="testWinBtn" type="button">🏆 Test Win</button>
+                <button class="button small green" id="bonusBtn" type="button">🪺 Open Bonus</button>
+                <button class="button small rainbow" id="resetEconomyBtn" type="button">💎 Refill Coins</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;gap:14px;align-content:start;">
+            <div class="paytable">
+              <h3>💸 Paytable</h3>
+              <div class="pay-row"><span>🐰 🐰 🐰</span><span>Bonus round + 60 × bet</span></div>
+              <div class="pay-row"><span>🌈 🌈 🌈</span><span>25 × bet + 5 free spins</span></div>
+              <div class="pay-row"><span>🥚 🥚 🥚</span><span>12 × bet</span></div>
+              <div class="pay-row"><span>🐣 🐣 🐣</span><span>10 × bet</span></div>
+              <div class="pay-row"><span>🍬 🍬 🍬</span><span>8 × bet</span></div>
+              <div class="pay-row"><span>Any 2 same</span><span>2 × bet</span></div>
+              <div class="meter"><div class="meter-fill" id="luckMeter"></div></div>
+            </div>
+            <div class="action-wall">
+              <h3>✨ Do extra ridiculous things</h3>
+              <div class="action-grid">
+                <button class="big-button primary" id="confettiBtn" type="button">🎉 Confetti</button>
+                <button class="big-button hot" id="sparkleStormBtn" type="button">✨ Sparkle Storm</button>
+                <button class="big-button cool" id="bunnyWaveBtn" type="button">🐰 Bunny Wave</button>
+                <button class="big-button green" id="coinBurstBtn" type="button">🪙 Coin Burst</button>
+              </div>
+              <div class="status" id="slotStatus">Ready for a completely responsible amount of Easter gambling.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="games" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">🎮 Arcade Floor</div>
+            <h2>Tap stuff. Win stuff. Make the page light up.</h2>
+            <p>Extra interactive games, all built for touch screens and thumbs. Because kids do not gather around a holiday page to admire tasteful restraint.</p>
+          </div>
+        </div>
+        <div class="games-grid">
+          <article class="game-card">
+            <h3>🥚 Egg Match Memory</h3>
+            <p class="mini-note">Flip the eggs and match all eight pairs.</p>
+            <div id="memoryBoard" class="memory-board board" aria-label="Egg match memory board"></div>
+            <div class="status" id="memoryStatus">Matches found: 0 of 8</div>
+            <div class="button-row"><button class="button small cool" id="memoryReset" type="button">Reset</button></div>
+          </article>
+
+          <article class="game-card">
+            <h3>🐰 Find the Bunny</h3>
+            <p class="mini-note">One bunny is hidden under the eggs. Fewer clicks means more bragging rights.</p>
+            <div id="huntGrid" class="hunt-grid board" aria-label="Find the bunny grid"></div>
+            <div class="status" id="huntStatus">Clicks: 0</div>
+            <div class="button-row"><button class="button small green" id="huntReset" type="button">Hide Bunny Again</button></div>
+          </article>
+
+          <article class="game-card">
+            <h3>🔨 Bunny Pop Bonk</h3>
+            <p class="mini-note">Tap the bunnies before they vanish. Golden bunnies score extra.</p>
+            <div id="whackGrid" class="whack-grid board" aria-label="Whack a bunny grid"></div>
+            <div class="status" id="whackStatus">Score: 0</div>
+            <div class="button-row"><button class="button small hot" id="whackStart" type="button">Start 20s Round</button></div>
+          </article>
+
+          <article class="game-card">
+            <h3>⚡ Easter Reaction Lights</h3>
+            <p class="mini-note">Wait for green, then tap fast. Tap early and the page mocks you.</p>
+            <div class="reaction-lights board" id="reactionLights"></div>
+            <div class="button-row"><button class="button small primary" id="reactionStart" type="button">Start Reaction Test</button></div>
+            <div class="status" id="reactionStatus">Best time: --</div>
+          </article>
+
+          <article class="game-card">
+            <h3>🧺 Catch the Falling Eggs</h3>
+            <p class="mini-note">Move the basket left and right. Catch eggs and candy before they splat.</p>
+            <div class="catch-area board" id="catchArea" aria-label="Catch the falling eggs game area">
+              <div class="basket" id="basket">🧺</div>
+            </div>
+            <div class="basket-controls">
+              <button class="button small" id="basketLeft" type="button">⬅️</button>
+              <button class="button small green" id="catchStart" type="button">Start</button>
+              <button class="button small" id="basketRight" type="button">➡️</button>
+            </div>
+            <div class="status" id="catchStatus">Score: 0</div>
+          </article>
+
+          <article class="game-card">
+            <h3>🧠 Easter Trivia Blitz</h3>
+            <p id="quizQuestion" class="mini-note">Loading question...</p>
+            <div class="quiz-answers" id="quizAnswers"></div>
+            <div class="status" id="quizStatus">Score: 0 of 0</div>
+            <div class="button-row"><button class="button small rainbow" id="quizNext" type="button">Next Question</button></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="facts" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">🌷 Easter Bits</div>
+            <h2>Fast facts, bright cards, zero coloring-book filler.</h2>
+            <p>Just clean holiday facts and springy nonsense so the page still has a little brain hiding under all the neon.</p>
+          </div>
+        </div>
+        <div class="links-grid fact-list">
+          <div class="fact"><strong>🥚 Eggs and Easter</strong><br>Eggs became symbols of new life and renewal long before they became an excuse to hide candy in the yard.</div>
+          <div class="fact"><strong>🐰 Why the bunny?</strong><br>The Easter rabbit tradition is often linked to German folk customs that later traveled to America.</div>
+          <div class="fact"><strong>🌼 Spring overload</strong><br>Flowers, chicks, eggs, baskets, and rabbits all show up because Easter overlaps with spring and new-life imagery.</div>
+          <div class="fact"><strong>🏛️ White House roll</strong><br>The White House Easter Egg Roll has existed, with interruptions, since the late 1800s.</div>
+          <div class="fact"><strong>📅 Moving holiday</strong><br>Easter shifts dates because it follows a calendar rule tied to spring and the moon, because simple holidays would be too kind.</div>
+          <div class="fact"><strong>🍬 Candy escalation</strong><br>Modern Easter somehow became part faith holiday, part spring festival, part strategic sugar deployment system.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap mega-panel">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">🌈 Mega Party Controls</div>
+            <h2>Push giant buttons and let the page embarrass itself beautifully.</h2>
+            <p>Extra polish mode. More movement. More glitter. More things that make noises. More reasons your CPU may sigh quietly.</p>
+          </div>
+        </div>
+        <div class="mega-buttons">
+          <button class="big-button rainbow" id="everythingBtn" type="button">🚨 EVERYTHING MODE</button>
+          <button class="big-button hot" id="screenShakeBtn" type="button">💥 SHAKE IT</button>
+          <button class="big-button cool" id="jackpotBtn" type="button">🏆 FAKE JACKPOT</button>
+        </div>
+        <div class="mega-info">
+          <div class="fact"><strong>🎟️ Tickets</strong><br>Win tickets from games and the slot machine. They are fake, but with confidence.</div>
+          <div class="fact"><strong>🔊 Sound</strong><br>All sounds are generated inline with Web Audio. No external files. No broken paths. No mystery silence.</div>
+          <div class="fact"><strong>📱 Mobile Ready</strong><br>Buttons are big, layouts stack cleanly, and basket controls exist for thumbs because desktop-only design is cowardice.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="portal" class="section">
+      <div class="wrap iframe-shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">🪺 Embedded Easter Portal</div>
+            <h2>Your hosted Easter page, baked into the giant arcade.</h2>
+            <p>This pulls in the live <code>#games</code> section from your hosted page so it rides along inside the one-file build instead of just sitting there like a forgotten side quest.</p>
+          </div>
+          <div class="button-row" style="margin:0">
+            <a class="button primary" href="https://bearicide.github.io/easter2026/#games" target="_blank" rel="noopener">🔗 Open Hosted Page</a>
+          </div>
+        </div>
+        <iframe src="https://bearicide.github.io/easter2026/#games" loading="lazy" title="Embedded Easter games portal"></iframe>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">🔗 Helpful Easter Links</div>
+            <h2>Extra clickables for the holiday spiral.</h2>
+            <p>Kid-friendly Easter and spring links, because one absurdly stuffed page somehow still was not enough.</p>
+          </div>
+        </div>
+        <div class="links-grid">
+          <a class="link-card" href="https://www.crayola.com/easter-coloring-pages" target="_blank" rel="noopener"><strong>Crayola Easter Pages</strong><span>Extra Easter art and activities if the internal chaos somehow runs dry.</span></a>
+          <a class="link-card" href="https://kids.britannica.com/kids/article/Easter/353077" target="_blank" rel="noopener"><strong>Britannica Kids: Easter</strong><span>A kid-friendly explainer about Easter and related traditions.</span></a>
+          <a class="link-card" href="https://www.history.com/articles/easter-symbols" target="_blank" rel="noopener"><strong>History: Easter Symbols</strong><span>Where eggs, bunnies, and traditions got tangled together over time.</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="wrap footer">Made with loud colors, giant buttons, and an unwise amount of Easter sparkle.</div>
+
+  <div class="overlay" id="bonusOverlay" aria-hidden="true">
+    <div class="modal-card">
+      <button class="button small close-x" id="closeBonus" type="button">✖</button>
+      <div class="eyebrow">🪺 Bonus Egg Pick Round</div>
+      <h3>Pick three eggs and grab the prize pile.</h3>
+      <p class="mini-note">Some eggs pay coins. Some pay tickets. One drops free spins. One goes absolutely feral.</p>
+      <div class="bonus-grid" id="bonusGrid"></div>
+      <div class="status" id="bonusStatus">Pick an egg to begin.</div>
+    </div>
+  </div>
+
+  <script>
+    const symbols = ['🐰','🥚','🐣','🍬','🌈','🧺'];
+    const reelWindows = [document.getElementById('reel0'), document.getElementById('reel1'), document.getElementById('reel2')];
+    const strips = [document.getElementById('strip0'), document.getElementById('strip1'), document.getElementById('strip2')];
+    const sparkLayer = document.getElementById('sparkLayer');
+    const soundToggle = document.getElementById('soundToggle');
+    const partyToggle = document.getElementById('partyToggle');
+    const coinsHud = document.getElementById('coinsHud');
+    const ticketsHud = document.getElementById('ticketsHud');
+    const coinsStat = document.getElementById('coinsStat');
+    const betStat = document.getElementById('betStat');
+    const freeSpinsStat = document.getElementById('freeSpinsStat');
+    const lastWinStat = document.getElementById('lastWinStat');
+    const jackpotText = document.getElementById('jackpotText');
+    const slotStatus = document.getElementById('slotStatus');
+    const luckMeter = document.getElementById('luckMeter');
+
+    const state = {
+      coins: 120,
+      tickets: 0,
+      bet: 5,
+      freeSpins: 0,
+      lastWin: 0,
+      soundOn: false,
+      spinning: false,
+      bonusLocked: false,
+      party: false,
+      luck: 0,
+      audioCtx: null,
+      master: null,
+      ambientTimer: null,
+      currentResult: ['🐰','🥚','🐣']
+    };
+
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+    function choice(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+    function clamp(value, min, max){ return Math.max(min, Math.min(max, value)); }
+    function shuffle(arr){
+      const copy = [...arr];
+      for(let i = copy.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function updateHud(){
+      coinsHud.textContent = state.coins;
+      ticketsHud.textContent = state.tickets;
+      coinsStat.textContent = state.coins;
+      betStat.textContent = state.bet;
+      freeSpinsStat.textContent = state.freeSpins;
+      lastWinStat.textContent = state.lastWin;
+      luckMeter.style.width = clamp(state.luck,0,100) + '%';
+    }
+
+    function setStatus(msg){ slotStatus.textContent = msg; }
+
+    function initReels(){
+      strips.forEach((strip, idx) => {
+        strip.innerHTML = '';
+        const sequence = [];
+        for(let i = 0; i < 14; i++) sequence.push(symbols[(i + idx) % symbols.length]);
+        sequence.forEach(sym => {
+          const el = document.createElement('div');
+          el.className = 'symbol';
+          el.textContent = sym;
+          strip.appendChild(el);
+        });
+      });
+      renderFinalSymbols(state.currentResult);
+    }
+
+    function renderFinalSymbols(result){
+      state.currentResult = result;
+      strips.forEach((strip, idx) => {
+        strip.innerHTML = '';
+        const before = [choice(symbols), choice(symbols)];
+        const after = [choice(symbols), choice(symbols), choice(symbols)];
+        [...before, result[idx], ...after].forEach(sym => {
+          const el = document.createElement('div');
+          el.className = 'symbol';
+          el.textContent = sym;
+          strip.appendChild(el);
+        });
+        strip.style.transform = 'translateY(-104px)';
+      });
+    }
+
+    function unlockAudio(){
+      if(state.audioCtx) return;
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if(!AudioContextClass) return;
+      state.audioCtx = new AudioContextClass();
+      state.master = state.audioCtx.createGain();
+      state.master.gain.value = .78;
+      state.master.connect(state.audioCtx.destination);
+    }
+
+    async function enableSound(on){
+      unlockAudio();
+      if(!state.audioCtx) return;
+      if(state.audioCtx.state === 'suspended') {
+        try { await state.audioCtx.resume(); } catch (e) {}
+      }
+      state.soundOn = on;
+      soundToggle.textContent = on ? '🔊 Sound On' : '🔇 Sound Off';
+      soundToggle.setAttribute('aria-pressed', String(on));
+      if(on){ startAmbient(); blip('sine', 440, .12, .08, .2); }
+      else { stopAmbient(); }
+    }
+
+    function envGain(duration, peak=0.22){
+      const g = state.audioCtx.createGain();
+      const now = state.audioCtx.currentTime;
+      g.gain.cancelScheduledValues(now);
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(peak, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      g.connect(state.master);
+      return g;
+    }
+
+    function blip(type, freq, duration=.16, peak=.22, detune=0, whenOffset=0){
+      if(!state.soundOn || !state.audioCtx || !state.master) return;
+      const osc = state.audioCtx.createOscillator();
+      const gain = envGain(duration, peak);
+      const now = state.audioCtx.currentTime + whenOffset;
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      osc.detune.setValueAtTime(detune, now);
+      osc.connect(gain);
+      osc.start(now);
+      osc.stop(now + duration);
+    }
+
+    function noiseBurst(duration=.18, peak=.14, lowpass=2200){
+      if(!state.soundOn || !state.audioCtx || !state.master) return;
+      const bufferSize = Math.floor(state.audioCtx.sampleRate * duration);
+      const buffer = state.audioCtx.createBuffer(1, bufferSize, state.audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for(let i=0;i<bufferSize;i++) data[i] = (Math.random() * 2 - 1) * (1 - i/bufferSize);
+      const source = state.audioCtx.createBufferSource();
+      const filter = state.audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = lowpass;
+      const gain = envGain(duration, peak);
+      source.buffer = buffer;
+      source.connect(filter);
+      filter.connect(gain);
+      source.start();
+    }
+
+    function soundSpin(){
+      blip('sawtooth', 180, .18, .18);
+      blip('square', 220, .22, .12, -5, .03);
+      blip('triangle', 260, .2, .11, 2, .06);
+    }
+    function soundStop(i){ blip('square', 320 + i*80, .12, .18); }
+    function soundWin(multiplier){
+      const peak = multiplier >= 20 ? .26 : .2;
+      [660, 880, 1100].forEach((f, idx) => blip('triangle', f, .24, peak, 0, idx * .06));
+      noiseBurst(.12, .08, 4200);
+    }
+    function soundBigWin(){
+      [440, 660, 880, 1320].forEach((f, idx) => blip('sawtooth', f, .4, .18, 0, idx * .07));
+      [880, 1100, 1320].forEach((f, idx) => blip('square', f, .25, .16, 0, .22 + idx * .07));
+      noiseBurst(.28, .12, 6000);
+    }
+    function soundLose(){ blip('triangle', 220, .14, .14); blip('triangle', 160, .2, .12, 0, .08); }
+    function soundBonus(){ [523, 659, 784, 1047].forEach((f, i) => blip('sine', f, .25, .18, 0, i * .08)); }
+    function soundPop(){ blip('square', 720, .08, .13); }
+    function soundGood(){ blip('triangle', 880, .12, .14); blip('triangle', 1120, .16, .12, 0, .05); }
+    function soundBad(){ blip('sawtooth', 180, .16, .14); }
+    function soundJackpot(){ soundBigWin(); setTimeout(() => soundBigWin(), 260); }
+
+    function startAmbient(){
+      stopAmbient();
+      state.ambientTimer = setInterval(() => {
+        if(!state.soundOn || state.spinning) return;
+        blip('sine', choice([330,392,440,494]), .14, .045, 0, 0);
+      }, 2300);
+    }
+    function stopAmbient(){
+      if(state.ambientTimer){ clearInterval(state.ambientTimer); state.ambientTimer = null; }
+    }
+
+    function spawnSparkles(x = window.innerWidth/2, y = window.innerHeight/2, count = 18){
+      for(let i=0;i<count;i++){
+        const s = document.createElement('div');
+        s.className = 'spark';
+        s.style.left = x + 'px';
+        s.style.top = y + 'px';
+        s.style.setProperty('--dx', rand(-180, 180) + 'px');
+        s.style.setProperty('--dy', rand(-180, 180) + 'px');
+        s.style.animationDelay = (i * .012) + 's';
+        sparkLayer.appendChild(s);
+        setTimeout(() => s.remove(), 1800);
+      }
+    }
+
+    function sparkleStorm(rounds = 6){
+      let fired = 0;
+      const timer = setInterval(() => {
+        spawnSparkles(rand(20, window.innerWidth - 20), rand(90, window.innerHeight - 20), 16);
+        fired += 1;
+        if(fired >= rounds) clearInterval(timer);
+      }, 150);
+    }
+
+    function flashScreen(){
+      document.body.classList.remove('screen-flash');
+      void document.body.offsetWidth;
+      document.body.classList.add('screen-flash');
+      setTimeout(() => document.body.classList.remove('screen-flash'), 450);
+    }
+
+    function adjustEconomy(coinsDelta=0, ticketsDelta=0){
+      state.coins = Math.max(0, state.coins + coinsDelta);
+      state.tickets = Math.max(0, state.tickets + ticketsDelta);
+      updateHud();
+    }
+
+    function evaluateSpin(result, bet){
+      const counts = result.reduce((map, s) => { map[s] = (map[s] || 0) + 1; return map; }, {});
+      const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+      const [symbol, count] = entries[0];
+      let win = 0;
+      let freeSpins = 0;
+      let bonus = false;
+      let message = 'No jackpot this time. The bunnies remain smug.';
+      if(count === 3){
+        if(symbol === '🐰'){ win = bet * 60; bonus = true; message = '🐰 Triple bunny! Bonus round unlocked.'; }
+        else if(symbol === '🌈'){ win = bet * 25; freeSpins = 5; message = '🌈 Rainbow blast! Big win and five free spins.'; }
+        else if(symbol === '🥚'){ win = bet * 12; message = '🥚 Egg stack! Nice hit.'; }
+        else if(symbol === '🐣'){ win = bet * 10; message = '🐣 Chick trio! Spring money.'; }
+        else if(symbol === '🍬'){ win = bet * 8; message = '🍬 Candy chain! Sugar-powered payout.'; }
+        else { win = bet * 14; message = '🧺 Basket bomb! A respectable haul.'; }
+      } else if(count === 2){
+        win = bet * 2;
+        if(result.includes('🌈')) freeSpins = 1;
+        message = freeSpins ? 'Two matched and a lucky rainbow. Tiny win plus a free spin.' : 'Two matched. Small win.';
+      }
+      return { win, freeSpins, bonus, message, symbol, count };
+    }
+
+    async function spinSlot(useFree=false, partyBoost=false){
+      if(state.spinning || state.bonusLocked) return;
+      unlockAudio();
+      if(useFree){
+        if(state.freeSpins <= 0){ setStatus('No free spins ready. The machine refuses charity.'); soundBad(); return; }
+        state.freeSpins -= 1;
+      } else {
+        if(state.coins < state.bet){ setStatus('Out of coins. Hit refill or win some from the games.'); soundBad(); return; }
+        state.coins -= state.bet;
+      }
+      state.spinning = true;
+      updateHud();
+      reelWindows.forEach(r => { r.classList.add('spinning'); r.classList.remove('win'); });
+      soundSpin();
+      setStatus(useFree ? 'Spinning a free round...' : 'Spinning for glory...');
+      const result = [];
+      for(let i=0;i<3;i++){
+        const weight = Math.random() + (partyBoost ? .08 : 0) + state.luck/200;
+        let sym;
+        if(weight > 1.65) sym = '🌈';
+        else if(weight > 1.32) sym = '🐰';
+        else sym = choice(symbols);
+        result.push(sym);
+      }
+      const displaySequences = result.map(target => [choice(symbols), choice(symbols), target, choice(symbols), choice(symbols)]);
+      displaySequences.forEach((seq, idx) => {
+        strips[idx].innerHTML = '';
+        seq.forEach(sym => {
+          const el = document.createElement('div');
+          el.className = 'symbol';
+          el.textContent = sym;
+          strips[idx].appendChild(el);
+        });
+      });
+
+      for(let i=0;i<3;i++){
+        await new Promise(resolve => setTimeout(resolve, 360 + i * 230));
+        reelWindows[i].classList.remove('spinning');
+        strips[i].style.transform = 'translateY(-104px)';
+        soundStop(i);
+      }
+
+      const outcome = evaluateSpin(result, state.bet);
+      state.lastWin = outcome.win;
+      state.coins += outcome.win;
+      state.freeSpins += outcome.freeSpins;
+      if(outcome.win > 0){
+        state.tickets += Math.max(1, Math.floor(outcome.win / 10));
+        result.forEach((_, i) => reelWindows[i].classList.add('win'));
+        state.luck = clamp(state.luck + 12, 0, 100);
+        if(outcome.win >= state.bet * 20 || outcome.bonus){ soundBigWin(); flashScreen(); sparkleStorm(8); }
+        else { soundWin(outcome.win / state.bet); spawnSparkles(window.innerWidth/2, 300, 28); }
+      } else {
+        state.luck = clamp(state.luck + 5, 0, 100);
+        soundLose();
+      }
+      if(outcome.bonus){
+        jackpotText.textContent = '🪺 Bonus Round Unlocked! Pick those eggs.';
+        openBonus();
+      } else if(outcome.win >= state.bet * 25){
+        jackpotText.textContent = '🌈 Rainbow storm! Free spins loaded.';
+      } else if(outcome.win > 0){
+        jackpotText.textContent = outcome.message;
+      } else {
+        jackpotText.textContent = '🐰 The machine wants another spin.';
+      }
+      updateHud();
+      setStatus(outcome.message);
+      state.spinning = false;
+    }
+
+    document.getElementById('spinBtn').addEventListener('click', () => spinSlot(false, false));
+    document.getElementById('maxBetBtn').addEventListener('click', () => { state.bet = 20; updateHud(); setStatus('Max bet loaded. Reckless. Beautiful.'); soundGood(); });
+    document.getElementById('freeSpinBtn').addEventListener('click', () => spinSlot(true, false));
+    document.getElementById('partySpinBtn').addEventListener('click', () => { sparkleStorm(5); spinSlot(false, true); });
+    document.getElementById('betDownBtn').addEventListener('click', () => { state.bet = clamp(state.bet - 1, 1, 20); updateHud(); soundPop(); });
+    document.getElementById('betUpBtn').addEventListener('click', () => { state.bet = clamp(state.bet + 1, 1, 20); updateHud(); soundPop(); });
+    document.getElementById('testWinBtn').addEventListener('click', () => {
+      state.coins += 50; state.tickets += 5; state.lastWin = 50; updateHud();
+      jackpotText.textContent = '🏆 Test win fired. The machine believes in you now.';
+      setStatus('Test win applied. Fifty coins and five tickets.');
+      soundBigWin(); flashScreen(); sparkleStorm(8);
+    });
+    document.getElementById('resetEconomyBtn').addEventListener('click', () => {
+      state.coins = 120; state.tickets = 0; state.bet = 5; state.freeSpins = 0; state.lastWin = 0; state.luck = 0; updateHud();
+      jackpotText.textContent = '💎 Coins refilled. Fiscal irresponsibility restored.';
+      setStatus('Economy reset.'); soundGood();
+    });
+
+    soundToggle.addEventListener('click', async () => { await enableSound(!state.soundOn); });
+    partyToggle.addEventListener('click', () => {
+      state.party = !state.party;
+      document.body.classList.toggle('party', state.party);
+      partyToggle.textContent = state.party ? '🌈 Party Mode On' : '🌈 Party Mode';
+      partyToggle.setAttribute('aria-pressed', String(state.party));
+      setStatus(state.party ? 'Party mode engaged. The page has become less reasonable.' : 'Party mode disengaged. Slightly.');
+      if(state.party){ sparkleStorm(6); soundBonus(); }
+    });
+    document.getElementById('testSoundBtn').addEventListener('click', async () => { if(!state.soundOn) await enableSound(true); soundJackpot(); flashScreen(); spawnSparkles(window.innerWidth/2, 180, 36); });
+    document.getElementById('megaSparkleBtn').addEventListener('click', () => { sparkleStorm(10); soundBonus(); });
+    document.getElementById('flashBtn').addEventListener('click', () => { flashScreen(); soundPop(); });
+    document.getElementById('rainBtn').addEventListener('click', () => { sparkleStorm(12); soundGood(); });
+    document.getElementById('luckyBtn').addEventListener('click', () => {
+      state.freeSpins += 2; state.coins += 10; state.luck = clamp(state.luck + 25, 0, 100); updateHud();
+      setStatus('Lucky button paid out 10 coins and 2 free spins because why not.');
+      soundBonus(); spawnSparkles(rand(100, window.innerWidth-100), 220, 28);
+    });
+    document.getElementById('confettiBtn').addEventListener('click', () => { sparkleStorm(10); soundGood(); });
+    document.getElementById('sparkleStormBtn').addEventListener('click', () => { sparkleStorm(18); soundJackpot(); });
+    document.getElementById('bunnyWaveBtn').addEventListener('click', () => { bunnyWave(); soundBonus(); });
+    document.getElementById('coinBurstBtn').addEventListener('click', () => { adjustEconomy(25, 3); sparkleStorm(6); soundGood(); setStatus('Coin burst showered 25 coins and 3 tickets on the house.'); });
+    document.getElementById('everythingBtn').addEventListener('click', async () => { if(!state.soundOn) await enableSound(true); document.body.classList.add('party'); state.party = true; sparkleStorm(20); flashScreen(); soundJackpot(); bunnyWave(); adjustEconomy(40, 8); setStatus('EVERYTHING MODE fired. Naturally.'); });
+    document.getElementById('screenShakeBtn').addEventListener('click', () => { shakePage(); soundBad(); });
+    document.getElementById('jackpotBtn').addEventListener('click', () => { fakeJackpot(); });
+
+    function shakePage(){
+      const el = document.body;
+      let n = 0;
+      const timer = setInterval(() => {
+        n += 1;
+        el.style.transform = `translate(${Math.sin(n*2.5)*3}px, ${Math.cos(n*2.2)*2}px)`;
+        if(n > 18){ clearInterval(timer); el.style.transform = ''; }
+      }, 22);
+    }
+
+    function bunnyWave(){
+      const chars = ['🐰','🐣','🥚','✨','🌷'];
+      for(let i=0;i<28;i++){
+        const s = document.createElement('div');
+        s.textContent = choice(chars);
+        s.style.position = 'fixed';
+        s.style.left = rand(0, window.innerWidth) + 'px';
+        s.style.top = '-30px';
+        s.style.fontSize = rand(24, 44) + 'px';
+        s.style.zIndex = '90';
+        s.style.pointerEvents = 'none';
+        s.style.transition = 'transform 2.6s linear, opacity 2.6s linear';
+        document.body.appendChild(s);
+        requestAnimationFrame(() => {
+          s.style.transform = `translate(${rand(-120, 120)}px, ${window.innerHeight + 120}px) rotate(${rand(-240,240)}deg)`;
+          s.style.opacity = '0';
+        });
+        setTimeout(() => s.remove(), 2800);
+      }
+    }
+
+    function fakeJackpot(){
+      state.coins += 120; state.tickets += 15; state.freeSpins += 3; state.lastWin = 120; updateHud();
+      jackpotText.textContent = '🏆 FAKE JACKPOT! The page is applauding itself.';
+      setStatus('Jackpot triggered. Coins, tickets, and free spins dumped into the bucket.');
+      soundJackpot(); flashScreen(); sparkleStorm(16); bunnyWave();
+    }
+
+    // Bonus round
+    const bonusOverlay = document.getElementById('bonusOverlay');
+    const bonusGrid = document.getElementById('bonusGrid');
+    const bonusStatus = document.getElementById('bonusStatus');
+    let bonusPicksLeft = 0;
+
+    function openBonus(){
+      if(state.bonusLocked) return;
+      state.bonusLocked = true;
+      bonusPicksLeft = 3;
+      bonusOverlay.classList.add('open');
+      bonusOverlay.setAttribute('aria-hidden','false');
+      bonusGrid.innerHTML = '';
+      bonusStatus.textContent = 'Pick three eggs.';
+      const prizes = shuffle([
+        {label:'20', coins:20, tickets:0, spins:0, icon:'🪙'},
+        {label:'35', coins:35, tickets:0, spins:0, icon:'🪙'},
+        {label:'2', coins:0, tickets:0, spins:2, icon:'🎁'},
+        {label:'10T', coins:0, tickets:10, spins:0, icon:'🎟️'},
+        {label:'60', coins:60, tickets:0, spins:0, icon:'💎'},
+        {label:'5T', coins:0, tickets:5, spins:0, icon:'🎟️'},
+        {label:'1', coins:0, tickets:0, spins:1, icon:'🎁'},
+        {label:'100', coins:100, tickets:0, spins:0, icon:'🌈'},
+        {label:'JACK', coins:45, tickets:8, spins:1, icon:'🐰'}
+      ]);
+      prizes.forEach(prize => {
+        const btn = document.createElement('button');
+        btn.className = 'bonus-tile';
+        btn.type = 'button';
+        btn.textContent = '🥚';
+        btn.addEventListener('click', () => pickBonus(btn, prize));
+        bonusGrid.appendChild(btn);
+      });
+      soundBonus();
+    }
+
+    function pickBonus(btn, prize){
+      if(btn.classList.contains('revealed') || bonusPicksLeft <= 0) return;
+      btn.classList.add('revealed');
+      btn.textContent = prize.icon;
+      adjustEconomy(prize.coins, prize.tickets);
+      state.freeSpins += prize.spins;
+      updateHud();
+      bonusPicksLeft -= 1;
+      bonusStatus.textContent = `Prize: ${prize.label} • Picks left: ${bonusPicksLeft}`;
+      spawnSparkles(btn.getBoundingClientRect().left + btn.offsetWidth/2, btn.getBoundingClientRect().top + btn.offsetHeight/2, 18);
+      soundGood();
+      if(bonusPicksLeft <= 0){
+        setTimeout(() => {
+          bonusStatus.textContent = 'Bonus round complete. Back to the machine, you glitter goblin.';
+          state.bonusLocked = false;
+        }, 200);
+      }
+    }
+
+    function closeBonus(){
+      if(bonusPicksLeft > 0){ bonusStatus.textContent = `Finish the picks first. Picks left: ${bonusPicksLeft}`; soundBad(); return; }
+      bonusOverlay.classList.remove('open');
+      bonusOverlay.setAttribute('aria-hidden','true');
+      jackpotText.textContent = '🎰 Back to spinning.';
+    }
+
+    document.getElementById('bonusBtn').addEventListener('click', openBonus);
+    document.getElementById('closeBonus').addEventListener('click', closeBonus);
+    bonusOverlay.addEventListener('click', (e) => { if(e.target === bonusOverlay) closeBonus(); });
+
+    // Memory game
+    const memorySymbols = ['🐰','🥚','🐣','🌷','🍬','🧺','🌈','🥕'];
+    const memoryBoard = document.getElementById('memoryBoard');
+    const memoryStatus = document.getElementById('memoryStatus');
+    let memoryState = { order: [], flipped: [], matched: 0, lock: false };
+
+    function buildMemory(){
+      memoryState = { order: shuffle([...memorySymbols, ...memorySymbols]), flipped: [], matched: 0, lock: false };
+      memoryBoard.innerHTML = '';
+      memoryState.order.forEach((sym, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'memory-card';
+        btn.innerHTML = `<span class="back">🥚</span><span class="face">${sym}</span>`;
+        btn.addEventListener('click', () => flipMemory(btn, idx));
+        memoryBoard.appendChild(btn);
+      });
+      memoryStatus.textContent = 'Matches found: 0 of 8';
+    }
+
+    function flipMemory(btn, idx){
+      if(memoryState.lock || btn.classList.contains('flipped') || btn.classList.contains('matched')) return;
+      btn.classList.add('flipped');
+      memoryState.flipped.push({ idx, btn, sym: memoryState.order[idx] });
+      soundPop();
+      if(memoryState.flipped.length === 2){
+        memoryState.lock = true;
+        const [a, b] = memoryState.flipped;
+        if(a.sym === b.sym){
+          a.btn.classList.add('matched'); b.btn.classList.add('matched');
+          memoryState.matched += 1;
+          memoryState.flipped = [];
+          memoryState.lock = false;
+          memoryStatus.textContent = `Matches found: ${memoryState.matched} of 8`;
+          adjustEconomy(4,1);
+          soundGood();
+          if(memoryState.matched === 8){
+            memoryStatus.textContent = 'Board cleared! +20 coins and +5 tickets';
+            adjustEconomy(20,5); sparkleStorm(5); soundBigWin();
+          }
+        } else {
+          soundBad();
+          setTimeout(() => {
+            a.btn.classList.remove('flipped');
+            b.btn.classList.remove('flipped');
+            memoryState.flipped = [];
+            memoryState.lock = false;
+          }, 650);
+        }
+      }
+    }
+    document.getElementById('memoryReset').addEventListener('click', buildMemory);
+
+    // Hunt game
+    const huntGrid = document.getElementById('huntGrid');
+    const huntStatus = document.getElementById('huntStatus');
+    let bunnyIndex = 0;
+    let huntClicks = 0;
+    function buildHunt(){
+      bunnyIndex = Math.floor(Math.random() * 25);
+      huntClicks = 0;
+      huntGrid.innerHTML = '';
+      for(let i=0;i<25;i++){
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'hunt-tile';
+        btn.textContent = '🥚';
+        btn.addEventListener('click', () => {
+          if(btn.disabled) return;
+          huntClicks += 1;
+          if(i === bunnyIndex){
+            btn.textContent = '🐰';
+            btn.classList.add('hit');
+            huntStatus.textContent = `Found the bunny in ${huntClicks} clicks! +15 coins`;
+            adjustEconomy(15,2);
+            soundBigWin(); sparkleStorm(5);
+            [...huntGrid.children].forEach(el => el.disabled = true);
+          } else {
+            btn.textContent = '🌷';
+            btn.classList.add('miss');
+            btn.disabled = true;
+            soundBad();
+            huntStatus.textContent = `Clicks: ${huntClicks}`;
+          }
+        });
+        huntGrid.appendChild(btn);
+      }
+      huntStatus.textContent = 'Clicks: 0';
+    }
+    document.getElementById('huntReset').addEventListener('click', buildHunt);
+
+    // Whack game
+    const whackGrid = document.getElementById('whackGrid');
+    const whackStatus = document.getElementById('whackStatus');
+    let whackTimer = null;
+    let whackActive = false;
+    let whackScore = 0;
+    let whackTimeLeft = 0;
+    function buildWhack(){
+      whackGrid.innerHTML = '';
+      for(let i=0;i<9;i++){
+        const hole = document.createElement('div');
+        hole.className = 'hole';
+        hole.innerHTML = `<button type="button" class="hole-btn"><span class="bunny-pop">🐰</span></button>`;
+        const btn = hole.querySelector('.hole-btn');
+        btn.addEventListener('click', () => {
+          if(!whackActive || !hole.classList.contains('active')) return;
+          const gold = hole.classList.contains('gold');
+          hole.classList.remove('active','gold');
+          whackScore += gold ? 5 : 2;
+          whackStatus.textContent = `Score: ${whackScore} • Time: ${whackTimeLeft}s`;
+          adjustEconomy(gold ? 5 : 2, gold ? 2 : 1);
+          soundGood();
+          spawnSparkles(btn.getBoundingClientRect().left + 30, btn.getBoundingClientRect().top + 30, 12);
+        });
+        whackGrid.appendChild(hole);
+      }
+    }
+    function startWhack(){
+      if(whackTimer) clearInterval(whackTimer);
+      whackActive = true; whackScore = 0; whackTimeLeft = 20;
+      whackStatus.textContent = `Score: 0 • Time: ${whackTimeLeft}s`;
+      whackTimer = setInterval(() => {
+        whackTimeLeft -= 1;
+        [...whackGrid.children].forEach(h => h.classList.remove('active','gold'));
+        const hole = whackGrid.children[Math.floor(Math.random() * whackGrid.children.length)];
+        hole.classList.add('active');
+        if(Math.random() > .78) hole.classList.add('gold');
+        soundPop();
+        whackStatus.textContent = `Score: ${whackScore} • Time: ${whackTimeLeft}s`;
+        if(whackTimeLeft <= 0){
+          clearInterval(whackTimer);
+          whackActive = false;
+          [...whackGrid.children].forEach(h => h.classList.remove('active','gold'));
+          const reward = whackScore * 2;
+          adjustEconomy(reward, Math.floor(whackScore / 4));
+          whackStatus.textContent = `Round done! Score: ${whackScore} • Reward: ${reward} coins`;
+          if(whackScore >= 18){ soundBigWin(); sparkleStorm(5); } else soundGood();
+        }
+      }, 1000);
+    }
+    document.getElementById('whackStart').addEventListener('click', startWhack);
+
+    // Reaction game
+    const reactionLights = document.getElementById('reactionLights');
+    const reactionStatus = document.getElementById('reactionStatus');
+    let reactionBest = null;
+    let reactionTimeout = null;
+    let reactionStartAt = 0;
+    let reactionWaiting = false;
+    let reactionReady = false;
+    function buildReaction(){
+      reactionLights.innerHTML = '';
+      for(let i=0;i<5;i++){
+        const light = document.createElement('button');
+        light.type = 'button';
+        light.className = 'reaction-light';
+        light.addEventListener('click', handleReactionTap);
+        reactionLights.appendChild(light);
+      }
+      reactionStatus.textContent = 'Best time: --';
+    }
+    function setReactionState(kind){
+      [...reactionLights.children].forEach(light => {
+        light.classList.remove('ready','go','bad');
+        if(kind) light.classList.add(kind);
+      });
+    }
+    function startReaction(){
+      if(reactionTimeout) clearTimeout(reactionTimeout);
+      reactionWaiting = true; reactionReady = false;
+      setReactionState('ready');
+      reactionStatus.textContent = 'Wait for green... do not jump the gun.';
+      soundPop();
+      reactionTimeout = setTimeout(() => {
+        reactionWaiting = false;
+        reactionReady = true;
+        reactionStartAt = performance.now();
+        setReactionState('go');
+        reactionStatus.textContent = 'GO! TAP NOW!';
+        soundGood();
+      }, rand(1100, 2800));
+    }
+    function handleReactionTap(){
+      if(reactionWaiting){
+        if(reactionTimeout) clearTimeout(reactionTimeout);
+        reactionWaiting = false;
+        setReactionState('bad');
+        reactionStatus.textContent = 'Too early. The rabbit judges your impatience.';
+        soundBad();
+        return;
+      }
+      if(reactionReady){
+        const time = Math.round(performance.now() - reactionStartAt);
+        reactionReady = false;
+        setReactionState('');
+        reactionBest = reactionBest === null ? time : Math.min(reactionBest, time);
+        const reward = time < 260 ? 18 : time < 360 ? 12 : 7;
+        adjustEconomy(reward, 2);
+        reactionStatus.textContent = `Time: ${time}ms • Best: ${reactionBest}ms • Reward: ${reward} coins`;
+        if(time < 260){ soundBigWin(); sparkleStorm(4); }
+        else soundGood();
+      }
+    }
+    document.getElementById('reactionStart').addEventListener('click', startReaction);
+
+    // Catch game
+    const catchArea = document.getElementById('catchArea');
+    const basket = document.getElementById('basket');
+    const catchStatus = document.getElementById('catchStatus');
+    let basketX = 50;
+    let catchRunning = false;
+    let catchScore = 0;
+    let catchSpawner = null;
+    let catchLoop = null;
+    const fallingItems = [];
+
+    function setBasket(){ basket.style.left = basketX + '%'; }
+    function moveBasket(dir){ basketX = clamp(basketX + dir * 8, 10, 90); setBasket(); soundPop(); }
+    document.getElementById('basketLeft').addEventListener('click', () => moveBasket(-1));
+    document.getElementById('basketRight').addEventListener('click', () => moveBasket(1));
+
+    window.addEventListener('keydown', e => {
+      if(e.key === 'ArrowLeft') moveBasket(-1);
+      if(e.key === 'ArrowRight') moveBasket(1);
+    });
+
+    function spawnFalling(){
+      const el = document.createElement('div');
+      el.className = 'falling';
+      const icon = Math.random() > .25 ? '🥚' : '🍬';
+      el.textContent = icon;
+      const x = rand(8, 88);
+      el.style.left = x + '%';
+      catchArea.appendChild(el);
+      fallingItems.push({ el, x, y: -20, speed: rand(1.8, 3.2), points: icon === '🥚' ? 2 : 3 });
+    }
+
+    function startCatch(){
+      stopCatch();
+      catchRunning = true; catchScore = 0; basketX = 50; setBasket();
+      catchStatus.textContent = 'Score: 0';
+      catchSpawner = setInterval(spawnFalling, 520);
+      catchLoop = setInterval(() => {
+        const basketLeft = basketX - 9;
+        const basketRight = basketX + 9;
+        for(let i=fallingItems.length - 1; i>=0; i--){
+          const item = fallingItems[i];
+          item.y += item.speed;
+          item.el.style.transform = `translateY(${item.y * 4}px)`;
+          if(item.y > 54 && item.x >= basketLeft && item.x <= basketRight){
+            catchScore += item.points;
+            adjustEconomy(item.points, 0);
+            soundGood();
+            spawnSparkles(catchArea.getBoundingClientRect().left + catchArea.clientWidth * item.x/100, catchArea.getBoundingClientRect().top + catchArea.clientHeight * .82, 10);
+            item.el.remove();
+            fallingItems.splice(i,1);
+            catchStatus.textContent = `Score: ${catchScore}`;
+          } else if(item.y > 70){
+            soundBad();
+            item.el.remove();
+            fallingItems.splice(i,1);
+          }
+        }
+      }, 40);
+      setTimeout(() => {
+        stopCatch();
+        adjustEconomy(catchScore, Math.floor(catchScore / 8));
+        catchStatus.textContent = `Round over! Score: ${catchScore} • Bonus coins: ${catchScore}`;
+        if(catchScore >= 20){ soundBigWin(); sparkleStorm(4); } else soundGood();
+      }, 16000);
+    }
+    function stopCatch(){
+      if(catchSpawner){ clearInterval(catchSpawner); catchSpawner = null; }
+      if(catchLoop){ clearInterval(catchLoop); catchLoop = null; }
+      catchRunning = false;
+      while(fallingItems.length){ const item = fallingItems.pop(); item.el.remove(); }
+    }
+    document.getElementById('catchStart').addEventListener('click', startCatch);
+
+    // Trivia
+    const quizData = [
+      { q:'What does Easter celebrate in Christianity?', options:['A giant chocolate rabbit','The resurrection of Jesus','A famous egg race','Spring cleaning'], answer:1, note:'Correct. Easter celebrates the resurrection of Jesus.' },
+      { q:'Why are eggs common Easter symbols?', options:['They symbolize new life','They were easier than pumpkins','They always glow','Rabbits made them official'], answer:0, note:'Correct. Eggs became symbols of new life and renewal.' },
+      { q:'Which animal is most associated with Easter traditions?', options:['Fox','Turtle','Rabbit or bunny','Owl'], answer:2, note:'Correct. Bunny supremacy, apparently.' },
+      { q:'The Easter Bunny tradition in America is often linked to immigrants from what country?', options:['Germany','Brazil','Australia','Japan'], answer:0, note:'Correct. It is often linked to German immigrants.' },
+      { q:'What is the White House Easter event called?', options:['The Bunny Sprint','The Easter Egg Roll','The Oval Hop','The Presidential Basket Toss'], answer:1, note:'Correct. It is called the White House Easter Egg Roll.' },
+      { q:'Why does Easter move around on the calendar?', options:['Moon-based date rules','Random yearly drawing','Weather reports','Candy supply'], answer:0, note:'Correct. Easter follows a seasonal and moon-linked calendar rule.' }
+    ];
+    const quizQuestion = document.getElementById('quizQuestion');
+    const quizAnswers = document.getElementById('quizAnswers');
+    const quizStatus = document.getElementById('quizStatus');
+    let quizPool = [];
+    let quizScore = 0;
+    let quizAsked = 0;
+    let currentQuiz = null;
+    let quizLocked = false;
+
+    function nextQuizQuestion(){
+      if(!quizPool.length) quizPool = shuffle(quizData);
+      currentQuiz = quizPool.pop();
+      quizLocked = false;
+      quizQuestion.textContent = currentQuiz.q;
+      quizAnswers.innerHTML = '';
+      currentQuiz.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer';
+        btn.type = 'button';
+        btn.textContent = option;
+        btn.addEventListener('click', () => answerQuiz(index, btn));
+        quizAnswers.appendChild(btn);
+      });
+      quizStatus.textContent = `Score: ${quizScore} of ${quizAsked}`;
+    }
+    function answerQuiz(index, button){
+      if(quizLocked) return;
+      quizLocked = true;
+      const buttons = [...quizAnswers.querySelectorAll('.answer')];
+      buttons.forEach((btn, i) => { if(i === currentQuiz.answer) btn.classList.add('correct'); });
+      if(index === currentQuiz.answer){
+        quizScore += 1;
+        adjustEconomy(8, 2);
+        soundGood();
+      } else {
+        button.classList.add('wrong');
+        soundBad();
+      }
+      quizAsked += 1;
+      quizStatus.textContent = `${currentQuiz.note} Score: ${quizScore} of ${quizAsked}`;
+    }
+    document.getElementById('quizNext').addEventListener('click', nextQuizQuestion);
+
+    // Global click sparkles
+    document.addEventListener('click', (e) => {
+      if(e.target.closest('button,a')) spawnSparkles(e.clientX, e.clientY, 8);
+    });
+
+    // Init
+    initReels();
+    updateHud();
+    buildMemory();
+    buildHunt();
+    buildWhack();
+    buildReaction();
+    nextQuizQuestion();
+    setBasket();
+    setStatus('Ready for a completely responsible amount of Easter gambling.');
+  </script>
+</body>
+</html>
